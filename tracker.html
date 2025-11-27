@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suivi de Correction DS</title>
+
+    <style>
+        /* =================================================================
+           STYLE CSS COMPLET POUR LA CARTE DE SUIVI
+           ================================================================= */
+        :root {
+            --card-bg: #2d3436; /* Arrière-plan sombre */
+            --main-color: #00cec9; /* Couleur vive par défaut (utilisée pour la frise) */
+            --text-color: #dfe6e9;
+            --disabled-color: #636e72;
+            --error-color: #ff4757; /* Rouge pour les erreurs/important */
+        }
+
+        /* Réinitialisation légère pour l'iframe */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: transparent;
+        }
+        
+        /* Importation de la police "Orbitron" pour le titre, effet futuriste/néon */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+        
+        /* Style général de la carte */
+        .correction-card {
+            font-family: 'Roboto', sans-serif; 
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            max-width: 800px;
+            margin: 0; 
+        }
+
+        /* =================================================================
+           STYLE DU TITRE FUTURISTE/NÉON
+           ================================================================= */
+        .correction-card h2 {
+            font-family: 'Orbitron', sans-serif; /* Police futuriste */
+            color: #fff; /* Blanc de base */
+            text-align: center;
+            margin-bottom: 25px;
+            /* Effet Néon (Glow) */
+            text-shadow: 
+                0 0 5px var(--main-color),  /* Lueur subtile */
+                0 0 10px var(--main-color), /* Lueur moyenne */
+                0 0 20px rgba(0, 206, 201, 0.7); /* Lueur diffuse */
+            font-size: 1.8em; /* Agrandissement du titre */
+            letter-spacing: 3px;
+            font-weight: 700;
+        }
+
+        .correction-card hr {
+            border-color: var(--disabled-color);
+            /* Réduit la marge par défaut des HR pour mieux contrôler l'espacement */
+            margin: 15px 0; 
+        }
+
+        /* Indicateurs en haut */
+        .header-indicators {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 0 20px 0;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 10px;
+            border: 1px solid var(--disabled-color);
+            border-radius: 8px;
+            min-width: 150px;
+            /* Harmonisation de la hauteur avec le mood-box */
+            min-height: 100px; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.02); /* Très léger fond */
+        }
+
+        .stat-box p {
+            margin: 0;
+            font-size: 1.1em; 
+            /* Changement de couleur pour supporter le Glow */
+            color: #fff; 
+            line-height: 1.2;
+            /* Effet Néon sur les légendes */
+            text-shadow: 0 0 8px rgba(0, 206, 201, 0.6);
+        }
+
+        .stat-value {
+            /* Augmentation de la taille pour mieux remplir l'espace */
+            font-size: 2.2em; 
+            font-weight: bold;
+            color: #fff;
+            display: inline;
+            margin-top: 5px;
+        }
+
+        /* =================================================================
+           BOÎTE D'HUMEUR
+           ================================================================= */
+        .mood-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 15px; 
+            border: 1px solid var(--disabled-color); 
+            border-radius: 8px;
+            min-width: 150px;
+            /* La couleur de fond dynamique sera définie par JS */
+            background-color: #3b4347; 
+            transition: background-color 0.5s ease;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            min-height: 100px; /* Hauteur de référence */
+        }
+        
+        .mood-icon-container {
+             display: flex;
+             flex-direction: column;
+             align-items: center;
+             justify-content: center;
+             margin-bottom: 5px;
+        }
+
+        #current-mood-icon {
+            font-size: 2.5em;
+            line-height: 1; 
+            margin-bottom: 5px;
+        }
+        #current-mood-text {
+            font-weight: bold;
+            font-size: 0.9em;
+            margin: 0;
+            color: #fff; 
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .mood-label {
+            margin: 5px 0 0;
+            font-size: 1.1em; 
+            color: #fff; 
+            font-weight: normal;
+            /* Effet Néon sur la légende Humeur */
+            text-shadow: 0 0 8px rgba(0, 206, 201, 0.6);
+        }
+        
+        /* =================================================================
+           FRISE CHRONOLOGIQUE
+           ================================================================= */
+        .timeline-container {
+            position: relative;
+            padding: 20px 0 30px; 
+        }
+
+        .timeline-steps {
+            display: flex;
+            align-items: center; 
+            justify-content: space-between;
+            position: relative;
+            z-index: 2; 
+        }
+
+        .timeline-item {
+            width: 17%; 
+            text-align: center;
+            opacity: 1; 
+            transition: opacity 0.5s ease;
+        }
+
+        .step-icon {
+            font-size: 1.2em; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 10px; 
+            width: 50px; 
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--card-bg); 
+            border: 4px solid var(--disabled-color); 
+            color: var(--disabled-color); 
+            z-index: 5;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .step-title {
+            font-size: 0.9em;
+            margin: 0;
+            margin-top: 5px; 
+        }
+
+        .timeline-item.future {
+            opacity: 0.5;
+        }
+
+        .timeline-item.completed .step-icon {
+            border-color: var(--main-color);
+            color: var(--main-color);
+        }
+
+        .timeline-item.active .step-icon {
+            border-color: var(--main-color);
+            color: var(--main-color);
+            box-shadow: 0 0 15px rgba(0, 206, 201, 0.9);
+            transform: scale(1.1);
+        }
+
+        .step-arrow {
+            font-size: 1.5em; 
+            color: var(--disabled-color);
+            flex-grow: 1; 
+            text-align: center;
+            margin: 0 5px;
+            content: '▶'; 
+            transition: color 0.5s ease, transform 0.5s ease;
+        }
+
+        .step-arrow.completed {
+            color: var(--main-color);
+            transform: scale(1.2);
+        }
+        
+        /* Style pour la date de retour */
+        .return-date-info {
+            /* Cadre ajouté */
+            border: 2px solid var(--main-color);
+            border-radius: 10px;
+            background-color: rgba(0, 206, 201, 0.05); /* Très légère teinte */
+            
+            text-align: center;
+            /* Agrandissement de la police */
+            font-size: 1.3em;
+            font-weight: bold;
+            color: var(--text-color);
+            /* Ajout de marge pour centrer entre la frise et le trait */
+            padding: 15px 10px; 
+            margin-top: 20px; 
+            box-shadow: 0 0 10px rgba(0, 206, 201, 0.1);
+        }
+        
+        .return-date-value {
+            color: var(--main-color);
+            margin-left: 5px;
+            text-shadow: 0 0 5px rgba(0, 206, 201, 0.5);
+        }
+
+        /* NOUVEAU : Style de la Citation */
+        .quote-text {
+            text-align: center;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 20px;
+            margin-bottom: 10px;
+            padding: 0 20px;
+            font-size: 1em;
+            line-height: 1.4;
+        }
+
+
+        /* =================================================================
+           BOUTONS ET REMARQUES
+           ================================================================= */
+        
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px; 
+            /* Moins de marge car le HR en a déjà */
+            margin-top: 15px; 
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px; 
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+            text-align: center;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3); 
+        }
+
+        .report-btn {
+            background-color: var(--main-color);
+            color: var(--card-bg);
+            flex-grow: 1; 
+        }
+
+        .report-btn:hover:not(.disabled) {
+            background-color: #00b894; 
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .report-btn.disabled {
+            background-color: var(--disabled-color);
+            cursor: not-allowed;
+            color: #fff;
+            box-shadow: none;
+        }
+
+        .remarks-btn {
+            background-color: transparent;
+            border: 2px solid var(--main-color);
+            color: var(--main-color);
+            flex-grow: 1; 
+        }
+
+        .remarks-btn:hover:not(.hidden) {
+            background-color: var(--main-color);
+            color: var(--card-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .remarks-area {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #3b4347;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+        
+        /* Couleur de fond BLEUE pour les remarques (cohérent avec --main-color) */
+        .remarks-area.important-bg {
+            /* Très légère teinte de la couleur principale */
+            background-color: rgba(0, 206, 201, 0.1); 
+            border: 2px solid var(--main-color);
+        }
+        
+        /* Couleur de fond BLEUE pour l'état d'erreur */
+        .remarks-area.error {
+            /* Maintenir l'aspect erreur (texte rouge) mais cadre bleu */
+            border: 2px solid var(--main-color); 
+            color: var(--error-color);
+            background-color: rgba(0, 206, 201, 0.15); 
+        }
+
+        .remarks-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .remarks-list li {
+            margin-bottom: 5px;
+            padding-left: 10px;
+            /* Style par défaut des remarques (bleu clair) */
+            border-left: 3px solid var(--main-color); 
+            color: var(--text-color);
+        }
+        
+        /* Style des remarques importantes (texte rouge, bordure bleue) */
+        .remarks-list li.important {
+            border-left-color: var(--main-color); /* Bordure reste bleue */
+            color: var(--error-color); /* Texte reste rouge pour l'impact */
+            font-weight: bold;
+        }
+        
+        /* S'assurer que les erreurs affichent correctement les bordures */
+        .remarks-area.error .remarks-list li {
+            border-left-color: var(--main-color);
+        }
+    </style>
+    <!-- Importation de la police Google Roboto -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Squelette HTML de la Carte -->
+    <div class="correction-card">
+        <!-- Ajout de la variable DS Number ici -->
+        <h2>DS n°<span id="ds-number">[X]</span> - Suivi de Correction</h2>
+
+        <div class="header-indicators">
+            <!-- 1. Indicateur Moyenne -->
+            <div class="stat-box average-gauge">
+                <p>Moyenne de Classe</p>
+                <span id="current-average" class="stat-value">--</span>
+            </div>
+            
+            <!-- 2. Nouvelle Boîte d'Humeur -->
+            <div id="mood-box" class="mood-box">
+                <div class="mood-icon-container">
+                    <span id="current-mood-icon">...</span>
+                    <p id="current-mood-text">...</p>
+                </div>
+                <!-- Libellé de l'humeur -->
+                <p class="mood-label">Humeur du correcteur</p>
+            </div>
+
+            <!-- 3. Indicateur Copies -->
+            <div class="stat-box copies-gauge">
+                <p>Copies Corrigées</p>
+                <span id="corrected-count" class="stat-value">--</span>
+                <span id="total-count">/--</span>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Frise Chronologique -->
+        <div class="timeline-container">
+            <div id="timeline-steps" class="timeline-steps"></div>
+            
+            <!-- Nouvelle Ligne de Date Estimée (Centrée, Agrandie, et ENCADRÉE) -->
+            <div class="return-date-info">
+                Date estimée de retour des copies : 
+                <span id="estimated-return-date" class="return-date-value">--/--/--</span>
+            </div>
+
+            <!-- NOUVEAU : Zone de citation -->
+            <div id="quote-display" class="quote-text"></div>
+        </div>
+        
+        <!-- Trait de séparation entre la date et les remarques -->
+        <hr>
+        
+        <!-- Zone d'affichage des remarques (déployable) -->
+        <div id="remarks-area" class="remarks-area hidden"></div>
+
+        <!-- Groupe de boutons alignés gauche/droite -->
+        <div class="button-group">
+            <!-- Bouton de Remarques à gauche (sans majuscule) -->
+            <button id="remarks-button" class="btn remarks-btn hidden">
+                📢 afficher les remarques sur le DS
+            </button>
+            
+            <!-- Bouton de Rapport à droite -->
+            <button id="report-button" class="btn report-btn disabled" disabled>
+                Télécharger le rapport
+            </button>
+        </div>
+    </div>
+
+    <!-- Code JavaScript pour la Logique et la Connexion aux Données -->
+    <script>
+        // =================================================================
+        // ⚠️ 1. CONFIGURATION: VEUILLEZ REMPLACER CES VALEURS
+        // =================================================================
+
+        // 1. L'ID de votre Google Sheet (la courte chaîne de caractères dans l'URL d'édition)
+        const SHEET_ID = '1pKcYxUJtMthkJ9mN96LP4RzwTMoitBGs1b-1rw2aAMg'; 
+
+        // 2. Le GID de l'onglet STATUT 
+        const GID_STATUT = '1069440488'; 
+
+        // 3. Le GID de l'onglet REMARQUES 
+        const GID_REMARQUES = '143784605'; 
+        
+        // ⚠️ LIEN DU RAPPORT : L'URL est désormais lue depuis le champ 'reportUrl' 
+        // de l'onglet STATUT. Assurez-vous d'avoir une ligne:
+        // Colonne A: reportUrl | Colonne B: VOTRE_LIEN_DU_RAPPORT
+        const DEFAULT_REPORT_URL = 'https://example.com/placeholder-rapport.pdf'; // Utilisé comme simple valeur par défaut.
+
+
+        // Les URLs de chargement sont construites automatiquement
+        const GOOGLE_SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID_STATUT}`; 
+        const REMARKS_SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID_REMARQUES}`;
+
+        const DEFAULT_SHEET_ID = 'VOTRE_ID_DE_FEUILLE_ICI';
+        const DEFAULT_GID_STATUT = '1069440488';
+        const DEFAULT_GID_REMARQUES = '143784605'; 
+
+        // =================================================================
+        // 2. CONSTANTES DE L'APPLICATION
+        // =================================================================
+
+        const CORRECTION_STEPS = [
+            { title: "Rédaction du corrigé", icon: "📝" },
+            { title: "Élaboration du barème", icon: "⚖️" },
+            { title: "Correction des copies test", icon: "🔍" },
+            { title: "Correction des copies", icon: "🖍️" },
+            { title: "Normalisation des notes", icon: "📊" },
+            { title: "Terminé", icon: "✅" }
+        ];
+
+        // Note: 'hue' (0 à 360) pour la couleur (0=Rouge, 120=Vert, 150=Cyan)
+        const MOODS = {
+            "Motivé": { icon: "😀", hue: 150 },
+            "Concentré": { icon: "🧠", hue: 120 },
+            "Perplexe": { icon: "🤔", hue: 60 },
+            "Enthousiaste": { icon: "🥳", hue: 90 },
+            "Épuisé": { icon: "😴", hue: 30 },
+            "Énervé": { icon: "😡", hue: 0 },
+            "Désespéré": { icon: "😩", hue: 0 }
+        };
+
+        // État de chargement par défaut (pour initialiser l'affichage avant l'appel API)
+        const DEFAULT_LOADING_STATE = {
+            currentMood: "Concentré", 
+            hue: 120
+        };
+
+
+        // =================================================================
+        // 3. FONCTIONS DE RÉCUPÉRATION DES DONNÉES
+        // =================================================================
+
+        /**
+         * Lit le fichier CSV de la Google Sheet STATUT et retourne un objet d'état.
+         */
+        async function fetchCurrentState() {
+            try {
+                // 1. VÉRIFICATION DE LA CONFIGURATION
+                const isSheetIdConfigured = SHEET_ID !== DEFAULT_SHEET_ID;
+                
+                if (!isSheetIdConfigured) {
+                     console.error("Erreur de configuration: L'ID de la feuille est encore au stade de placeholder.");
+                     throw new Error("Erreur de configuration: Veuillez remplacer 'VOTRE_ID_DE_FEUILLE_ICI' et 'VOTRE_GID_POUR_REMARQUES_ICI' dans la section CONFIGURATION du code.");
+                }
+
+                const cacheBuster = `&v=${new Date().getTime()}`;
+                const url = GOOGLE_SHEET_URL + cacheBuster;
+                
+                console.log(`[INFO_DEBUG] Tentative de chargement de l'URL: ${url}`);
+
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    const errorDetails = response.status === 404 ? 
+                        "Code 404 (Non trouvé). 1) Vos IDs sont-ils corrects ? 2) La feuille DOIT être 'Publiée sur le Web' (Fichier > Partager > Publier sur le Web) en format CSV." :
+                        `Code ${response.status}. L'accès est refusé, vérifiez les paramètres de publication.`;
+
+                    throw new Error(`Erreur HTTP: ${errorDetails}`);
+                }
+                
+                const csvText = await response.text();
+
+                const lines = csvText.trim().split('\n');
+                const state = {};
+
+                lines.forEach(line => {
+                    const parts = line.split(',');
+                    if (parts.length < 2) return; 
+                    
+                    const key = parts[0].trim();
+                    const value = parts[1].trim();
+                    
+                    if (!isNaN(value) && value !== '') {
+                        state[key] = parseFloat(value);
+                    } else if (value.toLowerCase() === 'true' || value.toLowerCase() === 'false') {
+                        state[key] = value.toLowerCase() === 'true';
+                    } else {
+                        state[key] = value;
+                    }
+                });
+
+                state.currentStepIndex = parseInt(state.currentStepIndex) || 0;
+                
+                // Champs standards
+                state.dsNumber = state.dsNumber || '--';
+                state.estimatedReturnDate = state.estimatedReturnDate || "--/--/--";
+                state.quoteText = state.quoteText || "Proverbe Shadok : quand on ne sait pas où l'on va, il faut y aller, et le plus vite possible !";
+                
+                // NOUVEAU: Récupération de l'URL du rapport (Champ 'reportUrl' dans la feuille STATUT)
+                state.reportUrl = state.reportUrl || null; 
+
+                return state;
+
+            } catch (error) {
+                console.error("Échec du chargement de l'état (Onglet STATUT).", error);
+                
+                const errorMessage = error.message.includes("Erreur de configuration") 
+                    ? error.message 
+                    : `Échec de la connexion aux données. Cause : ${error.message}`;
+
+                return {
+                    totalCopies: '--', currentStepIndex: 0, copiesCorrigées: '--', currentAverage: '--', dsNumber: '[X]',
+                    currentMood: "Désespéré", hasRemarks: true, estimatedReturnDate: "--/--/--",
+                    quoteText: "Erreur de chargement...",
+                    remarksText: errorMessage,
+                    reportUrl: null, // S'assurer que l'URL est nulle en cas d'erreur
+                    errorState: true
+                };
+            }
+        }
+
+        /**
+         * Lit le fichier CSV des remarques et retourne un tableau d'objets.
+         */
+        async function fetchRemarksList() {
+            try {
+                 // On vérifie si l'ID de la feuille est encore au défaut. Si oui, on coupe court.
+                 const isSheetIdConfigured = SHEET_ID !== DEFAULT_SHEET_ID;
+                 
+                 if (!isSheetIdConfigured) {
+                    return [{ title: "Non configuré", content: "L'ID de la Feuille est manquant dans la configuration.", isImportant: true }];
+                 }
+                
+                const cacheBuster = `&v=${new Date().getTime()}`;
+                const url = REMARKS_SHEET_URL + cacheBuster;
+                
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP: ${response.status}. L'URL de publication pourrait être incorrecte ou la feuille non publiée.`);
+                }
+                
+                const csvText = await response.text();
+
+                const lines = csvText.trim().split('\n');
+                const dataLines = lines.length > 0 && lines[0].toLowerCase().includes('titre') ? lines.slice(1) : lines;
+                
+                const remarksList = dataLines
+                    .filter(line => line.trim().length > 0)
+                    .map(line => {
+                        // Utilisation d'une regex pour diviser par virgule mais ignorer celles entre guillemets
+                        const parts = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); 
+                        
+                        if (parts.length >= 2) {
+                            const title = parts[0].trim().replace(/^"|"$/g, '');
+                            const content = parts[1].trim().replace(/^"|"$/g, '');
+                            // Nouvelle colonne pour la priorité (3e élément)
+                            const priority = parts[2] ? parts[2].trim().toUpperCase().replace(/^"|"$/g, '') : 'NORMAL'; 
+                            
+                            return {
+                                title: title,
+                                content: content,
+                                // Marque la remarque comme importante si le mot-clé est trouvé
+                                isImportant: priority.includes('IMPORTANT')
+                            };
+                        }
+                        return null;
+                    }).filter(remark => remark !== null);
+
+                return remarksList;
+
+            } catch (error) {
+                console.error("Échec du chargement des remarques (Onglet REMARQUES).", error);
+                return [{ title: "Erreur de chargement", content: `Impossible de lire la liste des remarques. (${error.message})`, isImportant: true }];
+            }
+        }
+        
+        /**
+         * Ouvre le lien du rapport final dans un nouvel onglet, en utilisant l'URL dynamique.
+         */
+        function downloadReport(reportUrl) {
+            if (reportUrl) {
+                window.open(reportUrl, '_blank');
+            } else {
+                console.warn("Lien de rapport non configuré ou manquant dans la feuille Google.");
+                // Afficher un message d'erreur dans la zone de remarques
+                const remarksArea = document.getElementById('remarks-area');
+                remarksArea.classList.remove('hidden');
+                remarksArea.classList.add('error');
+                remarksArea.innerHTML = '<ul class="remarks-list"><li><strong>Avertissement :</strong> Le rapport final est prêt, mais l\'URL du rapport (`reportUrl`) est manquante dans l\'onglet STATUT de votre feuille Google. Ajoutez la ligne "reportUrl" dans la colonne A et le lien dans la colonne B.</li></ul>';
+            }
+        }
+
+
+        // =================================================================
+        // 4. FONCTION DE MISE À JOUR DE L'INTERFACE
+        // =================================================================
+
+        function updateCorrectionDisplay(state, steps, moods, remarksList) {
+            // 1. Mise à jour des Indicateurs Chiffrés et Titre
+            document.getElementById('ds-number').textContent = state.dsNumber || '[X]';
+            document.getElementById('current-average').textContent = state.currentAverage !== '--' && state.currentAverage !== 0 ? state.currentAverage.toFixed(1) : '--';
+            document.getElementById('corrected-count').textContent = state.copiesCorrigées || '--';
+            document.getElementById('total-count').textContent = `/${state.totalCopies || '--'}`;
+            
+            // Mise à jour de la date de retour et de la citation
+            document.getElementById('estimated-return-date').textContent = state.estimatedReturnDate || "--/--/--";
+            document.getElementById('quote-display').textContent = state.quoteText;
+
+
+            // 2. Mise à jour de l'Humeur
+            const moodData = moods[state.currentMood] || moods["Désespéré"];
+            const moodBox = document.getElementById('mood-box');
+            const moodIcon = document.getElementById('current-mood-icon');
+            const moodText = document.getElementById('current-mood-text');
+            
+            moodIcon.textContent = state.errorState ? '❌' : moodData.icon;
+            moodText.textContent = state.errorState ? 'Erreur Config' : (state.currentMood || "Chargement...");
+            
+            // Calcul de la couleur HSL : HUE dynamique / Saturation à 80% / Luminosité à 40% (pour le fond)
+            const hue = state.errorState ? 0 : moodData.hue;
+            moodBox.style.backgroundColor = `hsl(${hue}, 80%, 40%)`;
+            
+            // 3. Génération et Mise à jour de la Frise Chronologique
+            const timelineStepsContainer = document.getElementById('timeline-steps');
+            timelineStepsContainer.innerHTML = ''; 
+            
+            const maxStep = steps.length - 1; 
+            
+            steps.forEach((step, index) => {
+                // Si l'application est en erreur, n'afficher que la première étape
+                if (state.errorState && index > 0) return;
+
+                const isCompleted = index < state.currentStepIndex;
+                const isActive = index === state.currentStepIndex;
+                
+                const stepDiv = document.createElement('div');
+                let classes = 'timeline-item';
+                
+                if (isCompleted) classes += ' completed';
+                if (isActive) classes += ' active'; 
+                if (index > state.currentStepIndex) classes += ' future'; 
+
+                stepDiv.className = classes;
+
+                stepDiv.innerHTML = `
+                    <div class="step-icon">${step.icon}</div>
+                    <p class="step-title">${step.title}</p>
+                `;
+                timelineStepsContainer.appendChild(stepDiv);
+
+                // N'ajouter la flèche que si on n'est pas à la dernière étape affichée
+                if (index < maxStep && !state.errorState) { 
+                    const arrowDiv = document.createElement('div');
+                    let arrowClasses = 'step-arrow';
+
+                    if (isCompleted) {
+                         arrowClasses += ' completed';
+                    } else if (isActive) {
+                         arrowClasses += ' active'; 
+                    } else {
+                         arrowClasses += ' future';
+                    }
+                    
+                    arrowDiv.className = arrowClasses;
+                    arrowDiv.textContent = '▶'; 
+                    timelineStepsContainer.appendChild(arrowDiv);
+                }
+            });
+            
+            // 4. Gestion du Bouton de Rapport
+            const reportButton = document.getElementById('report-button');
+            const isFinished = state.currentStepIndex === steps.length - 1 && !state.errorState;
+            const isLinkProvided = !!state.reportUrl; // Vérifie si reportUrl n'est pas nul ou vide
+            const isReadyToDownload = isFinished && isLinkProvided;
+
+            if (isReadyToDownload) { 
+                reportButton.classList.remove('disabled');
+                reportButton.removeAttribute('disabled');
+                // Utilise une fonction wrapper pour passer l'URL dynamique
+                reportButton.onclick = () => downloadReport(state.reportUrl); 
+            } else {
+                reportButton.classList.add('disabled');
+                reportButton.setAttribute('disabled', 'true');
+                reportButton.onclick = null; 
+            }
+            
+            // Mise à jour du texte du bouton si l'étape est terminée mais le lien manque
+            if (isFinished && !isLinkProvided) {
+                 reportButton.textContent = "Lien du rapport manquant !";
+            } else {
+                 reportButton.textContent = "Télécharger le rapport";
+            }
+
+
+            // 5. Gestion des Remarques (avec priorité et fond)
+            const remarksButton = document.getElementById('remarks-button');
+            const remarksArea = document.getElementById('remarks-area');
+            
+            // L'état d'erreur utilise le fond bleu, mais le texte d'erreur est rouge
+            remarksArea.classList.toggle('error', state.errorState);
+            
+            // VÉRIFIE s'il y a au moins UNE remarque importante pour appliquer le fond clair
+            const hasImportantRemarks = remarksList.some(r => r.isImportant);
+            // Applique le fond bleu uniquement si pas en état d'erreur
+            remarksArea.classList.toggle('important-bg', hasImportantRemarks && !state.errorState);
+
+
+            if (state.hasRemarks || state.errorState) { 
+                
+                let listHTML = '<ul class="remarks-list">';
+                
+                if (state.errorState) {
+                    listHTML += `<li><strong>Erreur fatale de connexion :</strong> ${state.remarksText}</li>`;
+                    remarksArea.classList.remove('hidden');
+                    remarksButton.classList.add('hidden'); 
+
+                } else if (remarksList.length > 0) {
+                     remarksList.forEach(remark => {
+                        // Ajout de la classe 'important' si nécessaire
+                        const liClass = remark.isImportant ? 'important' : '';
+                        listHTML += `<li class="${liClass}"><strong>${remark.title}</strong> : ${remark.content}</li>`;
+                    });
+                     remarksButton.classList.remove('hidden');
+                     remarksArea.classList.add('hidden'); 
+                } else {
+                    remarksButton.classList.add('hidden');
+                    remarksArea.classList.add('hidden');
+                }
+
+                listHTML += '</ul>';
+
+                remarksArea.innerHTML = listHTML;
+                
+                // Logique d'affichage/masquage du bouton
+                remarksButton.onclick = () => {
+                    const isHidden = remarksArea.classList.toggle('hidden');
+                    // Mise à jour du texte sans majuscule (comme demandé)
+                    remarksButton.innerHTML = isHidden 
+                        ? '📢 afficher les remarques sur le DS' 
+                        : '❌ masquer les remarques sur le DS';
+                };
+            } else {
+                remarksButton.classList.add('hidden');
+                remarksArea.classList.add('hidden');
+            }
+        }
+
+
+        // =================================================================
+        // 5. LANCEMENT DE L'APPLICATION
+        // =================================================================
+
+        // Fonction d'initialisation pour donner une couleur et un état par défaut immédiatement
+        function initializeDisplay() {
+            const moodBox = document.getElementById('mood-box');
+            const moodIcon = document.getElementById('current-mood-icon');
+            const moodText = document.getElementById('current-mood-text');
+            
+            // Applique la couleur par défaut (Concentré) avant le chargement des données
+            moodBox.style.backgroundColor = `hsl(${DEFAULT_LOADING_STATE.hue}, 80%, 40%)`;
+            moodIcon.textContent = MOODS[DEFAULT_LOADING_STATE.currentMood].icon;
+            moodText.textContent = "Chargement...";
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Initialisation de l'affichage avant l'appel asynchrone 
+            initializeDisplay();
+
+            const currentState = await fetchCurrentState();
+            
+            let remarksList = [];
+            if (!currentState.errorState && currentState.hasRemarks) { 
+                remarksList = await fetchRemarksList();
+            }
+            
+            // Mise à jour finale avec les données réelles
+            updateCorrectionDisplay(currentState, CORRECTION_STEPS, MOODS, remarksList);
+        });
+    </script>
+</body>
+</html>
