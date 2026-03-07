@@ -360,6 +360,35 @@
         color: var(--error-color);
         font-weight: bold;
     }
+
+    @keyframes fadeSlideIn {
+        from { opacity: 0; transform: translateY(-6px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .remarks-area:not(.hidden) {
+        animation: fadeSlideIn 0.3s ease;
+    }
+
+    .last-updated {
+        text-align: center;
+        font-size: 0.75em;
+        color: var(--disabled-color);
+        margin-top: 10px;
+    }
+
+    @media print {
+        .correction-card {
+            box-shadow: none;
+            background: white;
+            color: black;
+            border: 1px solid #ccc;
+        }
+        .correction-card h2 { text-shadow: none; color: black; }
+        .button-group, .last-updated { display: none; }
+        .step-icon { border-color: #333; color: #333; box-shadow: none; }
+        .return-date-info { border-color: #333; background: none; box-shadow: none; }
+    }
 </style>
 
 <div class="tracker-wrapper">
@@ -407,6 +436,7 @@
                     Télécharger le rapport
                 </button>
             </div>
+            <p id="last-updated" class="last-updated"></p>
         </div>
 
         <script>
@@ -449,7 +479,20 @@
             const DEFAULT_LOADING_STATE = { currentMood: "Concentré", hue: 120 };
 
             // =================================================================
-            // 3. FONCTIONS DE RÉCUPÉRATION DES DONNÉES
+            // 3. FONCTIONS UTILITAIRES
+            // =================================================================
+
+            function escapeHTML(str) {
+                return String(str)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;');
+            }
+
+            // =================================================================
+            // 4. FONCTIONS DE RÉCUPÉRATION DES DONNÉES
             // =================================================================
 
             async function fetchCurrentState() {
@@ -487,16 +530,30 @@
                     });
 
                     state.currentStepIndex = parseInt(state.currentStepIndex) || 0;
+                    state.currentStepIndex = Math.max(0, Math.min(state.currentStepIndex, CORRECTION_STEPS.length - 1));
                     state.dsNumber = state.dsNumber || '[X]';
                     state.estimatedReturnDate = state.estimatedReturnDate || "--/--/--";
                     state.quoteText = state.quoteText || "Proverbe Shadok : quand on ne sait pas où l'on va, il faut y aller, et le plus vite possible !";
-                    state.reportUrl = state.reportUrl || null;
+                    state.reportUrl = (state.reportUrl && /^https?:\/\//.test(state.reportUrl)) ? state.reportUrl : null;
+
+                    // Sauvegarde dans le cache local
+                    try { localStorage.setItem('tracker_state_cache', JSON.stringify(state)); } catch(e) {}
 
                     return state;
 
                 } catch (error) {
                     console.error("Échec du chargement de l'état (Onglet STATUT).", error);
                     const errorMessage = error.message.includes("Erreur de configuration") ? error.message : `Échec de la connexion aux données. Cause : ${error.message}`;
+
+                    // Tentative de lecture du cache local
+                    try {
+                        const cached = localStorage.getItem('tracker_state_cache');
+                        if (cached) {
+                            const cachedState = JSON.parse(cached);
+                            cachedState.fromCache = true;
+                            return cachedState;
+                        }
+                    } catch(e) {}
 
                     return {
                         totalCopies: '--',
@@ -553,10 +610,20 @@
                             return null;
                         }).filter(remark => remark !== null);
 
+                    // Sauvegarde des remarques dans le cache
+                    try { localStorage.setItem('tracker_remarks_cache', JSON.stringify(remarksList)); } catch(e) {}
+
                     return remarksList;
 
                 } catch (error) {
                     console.error("Échec du chargement des remarques (Onglet REMARQUES).", error);
+
+                    // Tentative de lecture du cache local
+                    try {
+                        const cached = localStorage.getItem('tracker_remarks_cache');
+                        if (cached) return JSON.parse(cached);
+                    } catch(e) {}
+
                     return [{ title: "Erreur de chargement", content: `Impossible de lire la liste des remarques. (${error.message})`, isImportant: true }];
                 }
             }
@@ -588,13 +655,13 @@
             }
 
             // =================================================================
-            // 4. FONCTION DE MISE À JOUR DE L'INTERFACE
+            // 5. FONCTION DE MISE À JOUR DE L'INTERFACE
             // =================================================================
 
             function updateCorrectionDisplay(state, steps, moods, remarksList) {
                 // 1. Mise à jour des Indicateurs Chiffrés et Titre
                 document.getElementById('ds-number').textContent = state.dsNumber;
-                const averageDisplay = state.currentAverage !== '--' && state.currentAverage !== 0 ? state.currentAverage.toFixed(1) : '--';
+                const averageDisplay = (state.currentAverage !== '--' && state.currentAverage !== null && state.currentAverage !== undefined) ? parseFloat(state.currentAverage).toFixed(1) : '--';
                 document.getElementById('current-average').textContent = averageDisplay;
                 document.getElementById('corrected-count').textContent = state.copiesCorrigées;
                 document.getElementById('total-count').textContent = `/${state.totalCopies || '--'}`;
@@ -696,7 +763,7 @@
                     remarksList.forEach(remark => {
                         const liClass = remark.isImportant ? 'important' : '';
                         listHTML += `
-                            <li class="${liClass}"><strong>${remark.title}</strong> : ${remark.content}</li>
+                            <li class="${liClass}"><strong>${escapeHTML(remark.title)}</strong> : ${escapeHTML(remark.content)}</li>
                         `;
                     });
                     listHTML += '</ul>';
@@ -719,7 +786,7 @@
 
 
             // =================================================================
-            // 5. LANCEMENT DE L'APPLICATION
+            // 6. LANCEMENT DE L'APPLICATION
             // =================================================================
             
             function initializeDisplay() {
@@ -734,6 +801,27 @@
                 moodText.textContent = "Chargement...";
             }
 
+
+            function updateLastUpdated(fromCache) {
+                const el = document.getElementById('last-updated');
+                if (!el) return;
+                const now = new Date();
+                const time = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+                el.textContent = fromCache
+                    ? `⚠️ Données hors-ligne (cache du ${time})`
+                    : `Dernière mise à jour : ${time}`;
+                el.style.color = fromCache ? 'var(--error-color)' : 'var(--disabled-color)';
+            }
+
+            async function refreshData() {
+                const currentState = await fetchCurrentState();
+                let remarksList = [];
+                if (!currentState.errorState && currentState.hasRemarks) {
+                    remarksList = await fetchRemarksList();
+                }
+                updateCorrectionDisplay(currentState, CORRECTION_STEPS, MOODS, remarksList);
+                updateLastUpdated(currentState.fromCache);
+            }
 
             document.addEventListener('DOMContentLoaded', async () => {
                 initializeDisplay();
@@ -755,14 +843,10 @@
                     return;
                 }
 
-                const currentState = await fetchCurrentState();
-                let remarksList = [];
+                await refreshData();
 
-                if (!currentState.errorState && currentState.hasRemarks) {
-                    remarksList = await fetchRemarksList();
-                }
-
-                updateCorrectionDisplay(currentState, CORRECTION_STEPS, MOODS, remarksList);
+                // Auto-rafraîchissement toutes les 5 minutes
+                setInterval(refreshData, 5 * 60 * 1000);
             });
         </script>
     </div>
