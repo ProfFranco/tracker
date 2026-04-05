@@ -405,8 +405,8 @@
 
                         if (value === 'true')  { state[key] = true;  return; }
                         if (value === 'false') { state[key] = false; return; }
-                        const num = parseFloat(value);
-                        if (!isNaN(num) && value !== '') { state[key] = num; return; }
+                        const num = Number(value);
+                        if (!isNaN(num) && value !== '' && String(num) === value) { state[key] = num; return; }
                         state[key] = value;
                     });
 
