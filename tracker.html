@@ -6,7 +6,6 @@
         font-family: 'Roboto', sans-serif;
         display: block;
         width: 100%;
-        /* L'hébergement dans un iframe gère l'isolation, on simplifie le reset */
     }
 
     .tracker-wrapper * {
@@ -58,16 +57,8 @@
     }
 
     @media (max-width: 600px) {
-        .header-indicators {
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .stat-box,
-        .mood-box {
-            width: 90%;
-            max-width: 350px;
-        }
+        .header-indicators { flex-direction: column; align-items: center; }
+        .stat-box, .mood-box { width: 90%; max-width: 350px; }
     }
 
     .stat-box {
@@ -148,10 +139,7 @@
         text-shadow: 0 0 8px rgba(0, 206, 201, 0.6);
     }
 
-    .timeline-container {
-        position: relative;
-        padding: 20px 0 30px;
-    }
+    .timeline-container { position: relative; padding: 20px 0 30px; }
 
     .timeline-steps {
         display: flex;
@@ -161,16 +149,8 @@
         z-index: 2;
     }
 
-    .step-title {
-        font-size: 0.8em;
-        padding: 0 5px;
-    }
-
-    @media (max-width: 600px) {
-        .step-title {
-            font-size: 0.7em;
-        }
-    }
+    .step-title { font-size: 0.8em; padding: 0 5px; }
+    @media (max-width: 600px) { .step-title { font-size: 0.7em; } }
 
     .timeline-item {
         width: 17%;
@@ -196,11 +176,7 @@
         transition: all 0.3s ease;
     }
 
-    .timeline-item.completed .step-icon {
-        border-color: var(--main-color);
-        color: var(--main-color);
-    }
-
+    .timeline-item.completed .step-icon { border-color: var(--main-color); color: var(--main-color); }
     .timeline-item.active .step-icon {
         border-color: var(--main-color);
         color: var(--main-color);
@@ -216,11 +192,7 @@
         margin: 0 5px;
         transition: color 0.5s ease, transform 0.5s ease;
     }
-
-    .step-arrow.completed {
-        color: var(--main-color);
-        transform: scale(1.2);
-    }
+    .step-arrow.completed { color: var(--main-color); transform: scale(1.2); }
 
     .return-date-info {
         border: 2px solid var(--main-color);
@@ -270,39 +242,21 @@
         box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
     }
 
-    .report-btn {
-        background-color: var(--main-color);
-        color: var(--card-bg);
-        flex-grow: 1;
-    }
-
+    .report-btn { background-color: var(--main-color); color: var(--card-bg); flex-grow: 1; }
     .report-btn:not([disabled]) {
         background-color: var(--main-color);
         color: #1a1a1a;
         font-size: 1.05em;
         box-shadow: 0 0 10px var(--main-color), 0 0 20px rgba(0, 206, 201, 0.5);
     }
-
     .report-btn:hover:not([disabled]) {
         background-color: #00b894;
         transform: translateY(-2px);
         box-shadow: 0 0 15px #00b894, 0 5px 10px rgba(0, 0, 0, 0.5);
     }
+    .report-btn[disabled] { background-color: var(--disabled-color); cursor: not-allowed; color: #fff; box-shadow: none; }
 
-    .report-btn[disabled] {
-        background-color: var(--disabled-color);
-        cursor: not-allowed;
-        color: #fff;
-        box-shadow: none;
-    }
-
-    .remarks-btn {
-        background-color: transparent;
-        border: 2px solid var(--main-color);
-        color: var(--main-color);
-        flex-grow: 1;
-    }
-
+    .remarks-btn { background-color: transparent; border: 2px solid var(--main-color); color: var(--main-color); flex-grow: 1; }
     .remarks-btn:hover:not(.hidden) {
         background-color: var(--main-color);
         color: var(--card-bg);
@@ -310,80 +264,28 @@
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
     }
 
-    .hidden {
-        display: none !important;
-    }
+    .hidden { display: none !important; }
 
-    .remarks-area {
-        margin-top: 15px;
-        padding: 15px;
-        background-color: #3b4347;
-        border-radius: 8px;
-        font-size: 0.9em;
-    }
+    .remarks-area { margin-top: 15px; padding: 15px; background-color: #3b4347; border-radius: 8px; font-size: 0.9em; }
+    .remarks-area.important-bg { background-color: rgba(0, 206, 201, 0.1); border: 2px solid var(--main-color); }
+    .remarks-area.error { border: 2px solid var(--error-color); background-color: rgba(255, 71, 87, 0.15); }
+    .remarks-area.error .remarks-list li { color: var(--error-color); border-left-color: var(--error-color); }
 
-    .remarks-area.important-bg {
-        background-color: rgba(0, 206, 201, 0.1);
-        border: 2px solid var(--main-color);
-    }
-
-    .remarks-area.error {
-        border: 2px solid var(--error-color);
-        background-color: rgba(255, 71, 87, 0.15);
-    }
-
-    .remarks-area.error .remarks-list li {
-        color: var(--error-color);
-        border-left-color: var(--error-color);
-    }
-
-    .remarks-list {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-    }
-
-    .remarks-list li {
-        margin-bottom: 8px;
-        padding-left: 10px;
-        border-left: 3px solid var(--main-color);
-        color: var(--text-color);
-        line-height: 1.3;
-    }
-
-    .remarks-list li strong {
-        color: #fff;
-    }
-
-    .remarks-list li.important {
-        border-left-color: var(--error-color);
-        color: var(--error-color);
-        font-weight: bold;
-    }
+    .remarks-list { list-style-type: none; padding: 0; margin: 0; }
+    .remarks-list li { margin-bottom: 8px; padding-left: 10px; border-left: 3px solid var(--main-color); color: var(--text-color); line-height: 1.3; }
+    .remarks-list li strong { color: #fff; }
+    .remarks-list li.important { border-left-color: var(--error-color); color: var(--error-color); font-weight: bold; }
 
     @keyframes fadeSlideIn {
         from { opacity: 0; transform: translateY(-6px); }
         to   { opacity: 1; transform: translateY(0); }
     }
+    .remarks-area:not(.hidden) { animation: fadeSlideIn 0.3s ease; }
 
-    .remarks-area:not(.hidden) {
-        animation: fadeSlideIn 0.3s ease;
-    }
-
-    .last-updated {
-        text-align: center;
-        font-size: 0.75em;
-        color: var(--disabled-color);
-        margin-top: 10px;
-    }
+    .last-updated { text-align: center; font-size: 0.75em; color: var(--disabled-color); margin-top: 10px; }
 
     @media print {
-        .correction-card {
-            box-shadow: none;
-            background: white;
-            color: black;
-            border: 1px solid #ccc;
-        }
+        .correction-card { box-shadow: none; background: white; color: black; border: 1px solid #ccc; }
         .correction-card h2 { text-shadow: none; color: black; }
         .button-group, .last-updated { display: none; }
         .step-icon { border-color: #333; color: #333; box-shadow: none; }
@@ -400,7 +302,6 @@
                 <p>Moyenne de Classe</p>
                 <span id="current-average" class="stat-value">--</span>
             </div>
-
             <div id="mood-box" class="mood-box">
                 <div class="mood-icon-container">
                     <span id="current-mood-icon">...</span>
@@ -408,26 +309,21 @@
                 </div>
                 <p class="mood-label">Humeur du correcteur</p>
             </div>
-
             <div class="stat-box copies-gauge">
                 <p>Copies Corrigées</p>
                 <span id="corrected-count" class="stat-value">--</span>
                 <span id="total-count">/--</span>
             </div>
         </div>
-        
+
         <div class="timeline-container">
             <div id="timeline-steps" class="timeline-steps"></div>
-
             <div class="return-date-info">
                 Date estimée de retour des copies :
                 <span id="estimated-return-date" class="return-date-value">--/--/--</span>
             </div>
-
             <div id="quote-display" class="quote-text"></div>
-
             <div id="remarks-area" class="remarks-area hidden"></div>
-
             <div class="button-group">
                 <button id="remarks-button" class="btn remarks-btn hidden">
                     📢 Afficher les remarques sur le DS
@@ -441,66 +337,59 @@
 
         <script>
             // =================================================================
-            // ⚠️ 1. CONFIGURATION
+            // 1. CONFIGURATION — source de données : GitHub Gist
             // =================================================================
-            // Remplacez ces valeurs par les vôtres.
             const GIST_USER = 'ProfFranco';
             const GIST_ID   = '092f02b8ae7c0edeffe8e68f9a5cb0c3';
 
-            const GOOGLE_SHEET_URL  = `https://gist.githubusercontent.com/${GIST_USER}/${GIST_ID}/raw/statut.csv`;
-            const REMARKS_SHEET_URL = `https://gist.githubusercontent.com/${GIST_USER}/${GIST_ID}/raw/remarques.csv`;
+            const STATUT_URL   = `https://gist.githubusercontent.com/${GIST_USER}/${GIST_ID}/raw/statut.csv`;
+            const REMARQUES_URL = `https://gist.githubusercontent.com/${GIST_USER}/${GIST_ID}/raw/remarques.csv`;
 
             // =================================================================
             // 2. CONSTANTES
             // =================================================================
-
             const CORRECTION_STEPS = [
-                { title: "Rédaction du corrigé", icon: "📝" },
-                { title: "Élaboration du barème", icon: "⚖️" },
-                { title: "Correction des copies test", icon: "🔍" },
-                { title: "Correction des copies", icon: "🖍️" },
+                { title: "Rédaction du corrigé",    icon: "📝" },
+                { title: "Élaboration du barème",   icon: "⚖️" },
+                { title: "Correction copies test",  icon: "🔍" },
+                { title: "Correction des copies",   icon: "🖍️" },
                 { title: "Normalisation des notes", icon: "📊" },
-                { title: "Terminé", icon: "✅" }
+                { title: "Terminé",                 icon: "✅" }
             ];
 
             const MOODS = {
-                "Motivé": { icon: "😀", hue: 150 },
-                "Concentré": { icon: "🧠", hue: 120 },
-                "Perplexe": { icon: "🤔", hue: 60 },
-                "Enthousiaste": { icon: "🥳", hue: 90 },
-                "Épuisé": { icon: "😴", hue: 30 },
-                "Énervé": { icon: "😡", hue: 0 },
-                "Désespéré": { icon: "😩", hue: 0 }
+                "Motivé":      { icon: "😀", hue: 150 },
+                "Concentré":   { icon: "🧠", hue: 120 },
+                "Perplexe":    { icon: "🤔", hue: 60  },
+                "Enthousiaste":{ icon: "🥳", hue: 90  },
+                "Épuisé":      { icon: "😴", hue: 30  },
+                "Énervé":      { icon: "😡", hue: 0   },
+                "Désespéré":   { icon: "😩", hue: 0   }
             };
 
             const DEFAULT_LOADING_STATE = { currentMood: "Concentré", hue: 120 };
 
             // =================================================================
-            // 3. FONCTIONS UTILITAIRES
+            // 3. UTILITAIRES
             // =================================================================
-
             function escapeHTML(str) {
                 return String(str)
-                    .replace(/&/g, '&amp;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;')
-                    .replace(/"/g, '&quot;')
+                    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
                     .replace(/'/g, '&#39;');
             }
 
             // =================================================================
-            // 4. FONCTIONS DE RÉCUPÉRATION DES DONNÉES
+            // 4. CHARGEMENT DES DONNÉES
             // =================================================================
-
             async function fetchCurrentState() {
-
-                    const cacheBuster = `&v=${new Date().getTime()}`;
-                    const url = GOOGLE_SHEET_URL + cacheBuster;
+                try {
+                    // Cache-buster : Gist peut mettre quelques minutes à propager
+                    const url = STATUT_URL + `?v=${new Date().getTime()}`;
                     const response = await fetch(url);
 
                     if (!response.ok) {
-                        const errorDetails = response.status === 404 ? "Code 404 (Non trouvé). Assurez-vous que la feuille est 'Publiée sur le Web' en format CSV." : `Code ${response.status}. Accès refusé.`;
-                        throw new Error(`Erreur HTTP: ${errorDetails}`);
+                        throw new Error(`Erreur HTTP ${response.status}`);
                     }
 
                     const csvText = await response.text();
@@ -508,333 +397,206 @@
                     const state = {};
 
                     lines.forEach(line => {
-                        const parts = line.split(',');
-                        if (parts.length < 2) return;
-                        const key = parts[0].trim();
-                        const value = parts[1].trim();
+                        // split sur la première virgule uniquement
+                        const idx = line.indexOf(',');
+                        if (idx < 0) return;
+                        const key   = line.slice(0, idx).trim();
+                        const value = line.slice(idx + 1).trim().replace(/^"|"$/g, '');
 
-                        if (!isNaN(value) && value !== '') {
-                            state[key] = parseFloat(value);
-                        } else if (value.toLowerCase() === 'true' || value.toLowerCase() === 'false') {
-                            state[key] = value.toLowerCase() === 'true';
-                        } else {
-                            state[key] = value.replace(/^"|"$/g, '');
-                        }
+                        if (value === 'true')  { state[key] = true;  return; }
+                        if (value === 'false') { state[key] = false; return; }
+                        const num = parseFloat(value);
+                        if (!isNaN(num) && value !== '') { state[key] = num; return; }
+                        state[key] = value;
                     });
 
-                    state.currentStepIndex = parseInt(state.currentStepIndex) || 0;
-                    state.currentStepIndex = Math.max(0, Math.min(state.currentStepIndex, CORRECTION_STEPS.length - 1));
-                    state.dsNumber = state.dsNumber || '[X]';
-                    state.estimatedReturnDate = state.estimatedReturnDate || "--/--/--";
-                    state.quoteText = state.quoteText || "Proverbe Shadok : quand on ne sait pas où l'on va, il faut y aller, et le plus vite possible !";
-                    state.reportUrl = (state.reportUrl && /^https?:\/\//.test(state.reportUrl)) ? state.reportUrl : null;
+                    state.currentStepIndex = Math.max(0, Math.min(
+                        parseInt(state.currentStepIndex) || 0,
+                        CORRECTION_STEPS.length - 1
+                    ));
+                    state.dsNumber           = state.dsNumber           || '[X]';
+                    state.estimatedReturnDate = state.estimatedReturnDate || '--/--/--';
+                    state.quoteText          = state.quoteText          || "Proverbe Shadok : quand on ne sait pas où l'on va, il faut y aller, et le plus vite possible !";
+                    state.reportUrl          = (state.reportUrl && /^https?:\/\//.test(state.reportUrl)) ? state.reportUrl : null;
 
-                    // Sauvegarde dans le cache local
                     try { localStorage.setItem('tracker_state_cache', JSON.stringify(state)); } catch(e) {}
-
                     return state;
 
                 } catch (error) {
-                    console.error("Échec du chargement de l'état (Onglet STATUT).", error);
-                    const errorMessage = error.message.includes("Erreur de configuration") ? error.message : `Échec de la connexion aux données. Cause : ${error.message}`;
+                    console.error("Échec du chargement STATUT :", error);
 
-                    // Tentative de lecture du cache local
                     try {
                         const cached = localStorage.getItem('tracker_state_cache');
                         if (cached) {
-                            const cachedState = JSON.parse(cached);
-                            cachedState.fromCache = true;
-                            return cachedState;
+                            const s = JSON.parse(cached);
+                            s.fromCache = true;
+                            return s;
                         }
                     } catch(e) {}
 
                     return {
-                        totalCopies: '--',
-                        currentStepIndex: 0,
-                        copiesCorrigées: '--',
-                        currentAverage: '--',
-                        dsNumber: '[X]',
-                        currentMood: "Désespéré",
-                        hasRemarks: true,
-                        estimatedReturnDate: "--/--/--",
+                        totalCopies: '--', currentStepIndex: 0,
+                        copiesCorrigées: '--', currentAverage: '--',
+                        dsNumber: '[X]', currentMood: "Désespéré",
+                        hasRemarks: false, estimatedReturnDate: '--/--/--',
                         quoteText: "Erreur de chargement...",
-                        remarksText: errorMessage,
-                        reportUrl: null,
-                        errorState: true
+                        remarksText: `Échec de la connexion : ${error.message}`,
+                        reportUrl: null, errorState: true
                     };
                 }
             }
 
             async function fetchRemarksList() {
-
-                    const cacheBuster = `&v=${new Date().getTime()}`;
-                    const url = REMARKS_SHEET_URL + cacheBuster;
+                try {
+                    const url = REMARQUES_URL + `?v=${new Date().getTime()}`;
                     const response = await fetch(url);
 
                     if (!response.ok) {
-                        throw new Error(`Erreur HTTP: ${response.status}. Vérifiez le GID et l'état de publication de l'onglet REMARQUES.`);
+                        throw new Error(`Erreur HTTP ${response.status}`);
                     }
 
                     const csvText = await response.text();
                     const lines = csvText.trim().split('\n');
-
-                    // Skip header row if present
-                    const dataLines = lines.length > 0 && lines[0].toLowerCase().includes('titre') ? lines.slice(1) : lines;
+                    // Ignorer la ligne d'en-tête si présente
+                    const dataLines = (lines.length > 0 && lines[0].toLowerCase().includes('titre'))
+                        ? lines.slice(1) : lines;
 
                     const remarksList = dataLines
                         .filter(line => line.trim().length > 0)
                         .map(line => {
                             const parts = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                            if (parts.length >= 2) {
-                                const title = parts[0].trim().replace(/^"|"$/g, '');
-                                const content = parts[1].trim().replace(/^"|"$/g, '');
-                                const priority = parts[2] ? parts[2].trim().toUpperCase().replace(/^"|"$/g, '') : 'NORMAL';
+                            if (parts.length < 2) return null;
+                            return {
+                                title:       parts[0].trim().replace(/^"|"$/g, ''),
+                                content:     parts[1].trim().replace(/^"|"$/g, ''),
+                                isImportant: parts[2] ? parts[2].trim().toUpperCase().replace(/^"|"$/g, '').includes('IMPORTANT') : false
+                            };
+                        }).filter(r => r !== null);
 
-                                return {
-                                    title: title,
-                                    content: content,
-                                    isImportant: priority.includes('IMPORTANT')
-                                };
-                            }
-                            return null;
-                        }).filter(remark => remark !== null);
-
-                    // Sauvegarde des remarques dans le cache
                     try { localStorage.setItem('tracker_remarks_cache', JSON.stringify(remarksList)); } catch(e) {}
-
                     return remarksList;
 
                 } catch (error) {
-                    console.error("Échec du chargement des remarques (Onglet REMARQUES).", error);
-
-                    // Tentative de lecture du cache local
+                    console.error("Échec du chargement REMARQUES :", error);
                     try {
                         const cached = localStorage.getItem('tracker_remarks_cache');
                         if (cached) return JSON.parse(cached);
                     } catch(e) {}
-
-                    return [{ title: "Erreur de chargement", content: `Impossible de lire la liste des remarques. (${error.message})`, isImportant: true }];
+                    return [{ title: "Erreur", content: `Impossible de lire les remarques (${error.message})`, isImportant: true }];
                 }
             }
 
-            function downloadReport(reportUrl) {
-                if (reportUrl) {
-                    try {
-                        // Ouvre le lien dans un nouvel onglet, ce qui fonctionne pour les PDFs/Pages web
-                        window.open(reportUrl, '_blank');
-                    } catch (e) {
-                        console.error("Erreur lors de l'ouverture du lien :", e);
-                        showReportError("Le navigateur a bloqué le lien ou celui-ci mène à un téléchargement inattendu. Veuillez vérifier l'URL fournie.");
-                    }
-                } else {
-                    showReportError("Le rapport final est prêt, mais l'URL du rapport (<code>reportUrl</code>) est manquante ou vide.");
-                }
-            }
-
-            function showReportError(message) {
-                const remarksArea = document.getElementById('remarks-area');
-                remarksArea.classList.remove('hidden');
-                remarksArea.classList.add('error');
-                document.getElementById('remarks-button').classList.add('hidden'); 
-                remarksArea.innerHTML = `
-                    <ul class="remarks-list">
-                        <li class="important"> <strong>Avertissement :</strong> ${message} </li>
-                    </ul>
-                `;
-            }
-
             // =================================================================
-            // 5. FONCTION DE MISE À JOUR DE L'INTERFACE
+            // 5. AFFICHAGE
             // =================================================================
-
             function updateCorrectionDisplay(state, steps, moods, remarksList) {
-                // 1. Mise à jour des Indicateurs Chiffrés et Titre
                 document.getElementById('ds-number').textContent = state.dsNumber;
-                const averageDisplay = (state.currentAverage !== '--' && state.currentAverage !== null && state.currentAverage !== undefined) ? parseFloat(state.currentAverage).toFixed(1) : '--';
-                document.getElementById('current-average').textContent = averageDisplay;
-                document.getElementById('corrected-count').textContent = state.copiesCorrigées;
+                const avg = (state.currentAverage !== '--' && state.currentAverage != null)
+                    ? parseFloat(state.currentAverage).toFixed(1) : '--';
+                document.getElementById('current-average').textContent = avg;
+                document.getElementById('corrected-count').textContent = state.copiesCorrigées || '--';
                 document.getElementById('total-count').textContent = `/${state.totalCopies || '--'}`;
                 document.getElementById('estimated-return-date').textContent = state.estimatedReturnDate;
                 document.getElementById('quote-display').textContent = state.quoteText;
 
-
-                // 2. Mise à jour de l'Humeur
+                // Humeur
                 const moodData = moods[state.currentMood] || moods["Désespéré"];
-                const moodBox = document.getElementById('mood-box');
-                const moodIcon = document.getElementById('current-mood-icon');
-                const moodText = document.getElementById('current-mood-text');
-                const currentMoodName = state.errorState ? 'Erreur Config' : (state.currentMood || "Chargement...");
+                document.getElementById('current-mood-icon').textContent = state.errorState ? '❌' : moodData.icon;
+                document.getElementById('current-mood-text').textContent = state.errorState ? 'Erreur' : (state.currentMood || 'Chargement...');
+                document.getElementById('mood-box').style.backgroundColor =
+                    `hsl(${state.errorState ? 0 : moodData.hue}, 80%, 40%)`;
 
-                moodIcon.textContent = state.errorState ? '❌' : moodData.icon;
-                moodText.textContent = currentMoodName;
-
-                const hue = state.errorState ? 0 : moodData.hue;
-                moodBox.style.backgroundColor = `hsl(${hue}, 80%, 40%)`;
-
-                // 3. Génération et Mise à jour de la Frise Chronologique
-                const timelineStepsContainer = document.getElementById('timeline-steps');
-                timelineStepsContainer.innerHTML = '';
-                const maxStep = steps.length - 1;
-
+                // Frise
+                const container = document.getElementById('timeline-steps');
+                container.innerHTML = '';
                 steps.forEach((step, index) => {
                     if (state.errorState && index > 0) return;
-
                     const isCompleted = index < state.currentStepIndex;
-                    const isActive = index === state.currentStepIndex;
-
+                    const isActive    = index === state.currentStepIndex;
                     const stepDiv = document.createElement('div');
-                    let classes = 'timeline-item';
-                    if (isCompleted) classes += ' completed';
-                    if (isActive) classes += ' active';
-                    stepDiv.className = classes;
-                    stepDiv.innerHTML = `
-                        <div class="step-icon">${step.icon}</div>
-                        <p class="step-title">${step.title}</p>
-                    `;
-                    timelineStepsContainer.appendChild(stepDiv);
-
-                    // Ajout de la flèche entre les étapes
-                    if (index < maxStep && !state.errorState) {
-                        const arrowDiv = document.createElement('div');
-                        let arrowClasses = 'step-arrow';
-                        if (isCompleted) {
-                            arrowClasses += ' completed';
-                        }
-                        arrowDiv.className = arrowClasses;
-                        arrowDiv.textContent = '▶';
-                        timelineStepsContainer.appendChild(arrowDiv);
+                    stepDiv.className = 'timeline-item' + (isCompleted ? ' completed' : '') + (isActive ? ' active' : '');
+                    stepDiv.innerHTML = `<div class="step-icon">${step.icon}</div><p class="step-title">${step.title}</p>`;
+                    container.appendChild(stepDiv);
+                    if (index < steps.length - 1 && !state.errorState) {
+                        const arrow = document.createElement('div');
+                        arrow.className = 'step-arrow' + (isCompleted ? ' completed' : '');
+                        arrow.textContent = '▶';
+                        container.appendChild(arrow);
                     }
                 });
 
-
-                // 4. Gestion du Bouton de Rapport
+                // Bouton rapport
                 const reportButton = document.getElementById('report-button');
                 const isFinished = state.currentStepIndex === steps.length - 1 && !state.errorState;
-                const isLinkProvided = !!state.reportUrl;
-                const isReadyToDownload = isFinished && isLinkProvided;
-
-                if (isReadyToDownload) {
+                if (isFinished && state.reportUrl) {
                     reportButton.removeAttribute('disabled');
-                    reportButton.onclick = () => downloadReport(state.reportUrl);
+                    reportButton.onclick = () => window.open(state.reportUrl, '_blank');
                     reportButton.textContent = "Télécharger le rapport";
                 } else {
                     reportButton.setAttribute('disabled', 'true');
                     reportButton.onclick = null;
-                    if (isFinished && !isLinkProvided) {
-                        reportButton.textContent = "Lien du rapport manquant !";
-                    } else {
-                        reportButton.textContent = "Télécharger le rapport";
-                    }
+                    reportButton.textContent = (isFinished && !state.reportUrl)
+                        ? "Lien du rapport manquant !" : "Télécharger le rapport";
                 }
 
-
-                // 5. Gestion des Remarques (avec priorité et fond)
+                // Remarques
                 const remarksButton = document.getElementById('remarks-button');
-                const remarksArea = document.getElementById('remarks-area');
-                remarksArea.classList.toggle('error', state.errorState);
-
-                const hasImportantRemarks = remarksList.some(r => r.isImportant);
-                remarksArea.classList.toggle('important-bg', hasImportantRemarks && !state.errorState);
-
-                let listHTML = '';
+                const remarksArea   = document.getElementById('remarks-area');
+                remarksArea.classList.toggle('error', !!state.errorState);
+                remarksArea.classList.toggle('important-bg', !state.errorState && remarksList.some(r => r.isImportant));
 
                 if (state.errorState) {
-                    listHTML = `
-                        <ul class="remarks-list">
-                            <li class="important"><strong>Erreur fatale de connexion :</strong> ${state.remarksText}</li>
-                        </ul>
-                    `;
+                    remarksArea.innerHTML = `<ul class="remarks-list"><li class="important"><strong>Erreur :</strong> ${escapeHTML(state.remarksText || '')}</li></ul>`;
                     remarksArea.classList.remove('hidden');
                     remarksButton.classList.add('hidden');
-
                 } else if (remarksList.length > 0) {
-                    listHTML = '<ul class="remarks-list">';
-                    remarksList.forEach(remark => {
-                        const liClass = remark.isImportant ? 'important' : '';
-                        listHTML += `
-                            <li class="${liClass}"><strong>${escapeHTML(remark.title)}</strong> : ${escapeHTML(remark.content)}</li>
-                        `;
-                    });
-                    listHTML += '</ul>';
-
+                    remarksArea.innerHTML = '<ul class="remarks-list">' +
+                        remarksList.map(r => `<li class="${r.isImportant ? 'important' : ''}"><strong>${escapeHTML(r.title)}</strong> : ${escapeHTML(r.content)}</li>`).join('') +
+                        '</ul>';
                     remarksButton.classList.remove('hidden');
                     remarksArea.classList.add('hidden');
+                    remarksButton.onclick = () => {
+                        const hidden = remarksArea.classList.toggle('hidden');
+                        remarksButton.innerHTML = hidden
+                            ? '📢 Afficher les remarques sur le DS'
+                            : '❌ Masquer les remarques sur le DS';
+                    };
                 } else {
                     remarksButton.classList.add('hidden');
                     remarksArea.classList.add('hidden');
                 }
-
-                remarksArea.innerHTML = listHTML;
-
-                // Logique du bouton Afficher/Masquer
-                remarksButton.onclick = () => {
-                    const isHidden = remarksArea.classList.toggle('hidden');
-                    remarksButton.innerHTML = isHidden ? '📢 Afficher les remarques sur le DS' : '❌ Masquer les remarques sur le DS';
-                };
             }
-
-
-            // =================================================================
-            // 6. LANCEMENT DE L'APPLICATION
-            // =================================================================
-            
-            function initializeDisplay() {
-                const moodBox = document.getElementById('mood-box');
-                const moodIcon = document.getElementById('current-mood-icon');
-                const moodText = document.getElementById('current-mood-text');
-                const moodData = MOODS[DEFAULT_LOADING_STATE.currentMood];
-
-                // Affichage de l'état de chargement initial
-                moodBox.style.backgroundColor = `hsl(${moodData.hue}, 80%, 40%)`;
-                moodIcon.textContent = moodData.icon;
-                moodText.textContent = "Chargement...";
-            }
-
 
             function updateLastUpdated(fromCache) {
                 const el = document.getElementById('last-updated');
                 if (!el) return;
-                const now = new Date();
-                const time = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+                const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
                 el.textContent = fromCache
                     ? `⚠️ Données hors-ligne (cache du ${time})`
                     : `Dernière mise à jour : ${time}`;
                 el.style.color = fromCache ? 'var(--error-color)' : 'var(--disabled-color)';
             }
 
+            // =================================================================
+            // 6. INIT & RAFRAÎCHISSEMENT
+            // =================================================================
+            function initializeDisplay() {
+                const moodData = MOODS[DEFAULT_LOADING_STATE.currentMood];
+                document.getElementById('mood-box').style.backgroundColor = `hsl(${moodData.hue}, 80%, 40%)`;
+                document.getElementById('current-mood-icon').textContent = moodData.icon;
+                document.getElementById('current-mood-text').textContent = "Chargement...";
+            }
+
             async function refreshData() {
-                const currentState = await fetchCurrentState();
-                let remarksList = [];
-                if (!currentState.errorState && currentState.hasRemarks) {
-                    remarksList = await fetchRemarksList();
-                }
-                updateCorrectionDisplay(currentState, CORRECTION_STEPS, MOODS, remarksList);
-                updateLastUpdated(currentState.fromCache);
+                const state = await fetchCurrentState();
+                const remarks = (!state.errorState && state.hasRemarks) ? await fetchRemarksList() : [];
+                updateCorrectionDisplay(state, CORRECTION_STEPS, MOODS, remarks);
+                updateLastUpdated(state.fromCache);
             }
 
             document.addEventListener('DOMContentLoaded', async () => {
                 initializeDisplay();
-
-                if (SHEET_ID === DEFAULT_SHEET_ID) {
-                    const errorState = {
-                        errorState: true,
-                        remarksText: "Erreur de configuration: Veuillez remplacer l'ID de la feuille Google (const SHEET_ID) dans le code JavaScript.",
-                        dsNumber: '[X]',
-                        currentAverage: '--',
-                        copiesCorrigées: '--',
-                        totalCopies: '--',
-                        estimatedReturnDate: "--/--/--",
-                        currentStepIndex: 0,
-                        quoteText: "Erreur de chargement...",
-                        reportUrl: null
-                    };
-                    updateCorrectionDisplay(errorState, CORRECTION_STEPS, MOODS, []);
-                    return;
-                }
-
                 await refreshData();
-
-                // Auto-rafraîchissement toutes les 5 minutes
                 setInterval(refreshData, 5 * 60 * 1000);
             });
         </script>
