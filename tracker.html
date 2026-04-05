@@ -493,10 +493,6 @@
             // =================================================================
 
             async function fetchCurrentState() {
-                try {
-                    if (SHEET_ID === DEFAULT_SHEET_ID) {
-                        throw new Error("Erreur de configuration: Veuillez remplacer l'ID de la feuille.");
-                    }
 
                     const cacheBuster = `&v=${new Date().getTime()}`;
                     const url = GOOGLE_SHEET_URL + cacheBuster;
@@ -570,10 +566,6 @@
             }
 
             async function fetchRemarksList() {
-                try {
-                    if (SHEET_ID === DEFAULT_SHEET_ID) {
-                        return [{ title: "Non configuré", content: "L'ID de la Feuille est manquant.", isImportant: true }];
-                    }
 
                     const cacheBuster = `&v=${new Date().getTime()}`;
                     const url = REMARKS_SHEET_URL + cacheBuster;
