@@ -1,20 +1,33 @@
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700&family=Source+Code+Pro:wght@400;500;600;700&display=swap');
 
     .tracker-wrapper {
-        font-family: 'Roboto', sans-serif;
+        font-family: 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
         display: block;
         width: 100%;
-        /* L'hébergement dans un iframe gère l'isolation, on simplifie le reset */
     }
 
     .tracker-wrapper * {
-        --card-bg: #2d3436;
-        --main-color: #00cec9;
-        --text-color: #dfe6e9;
-        --disabled-color: #636e72;
-        --error-color: #ff4757;
+        /* Palette CHECK — thème sombre */
+        --bg:           #1a1814;
+        --surface:      #242018;
+        --card:         #2a261e;
+        --border:       #3a3428;
+        --border-dark:  #4a4438;
+        --text:         #e8e4dc;
+        --text-muted:   #9e9a90;
+        --text-dim:     #6b675f;
+        --accent:       #5b9bd5;
+        --accent-bg:    rgba(91,155,213,0.12);
+        --success:      #7bc67e;
+        --success-bg:   rgba(123,198,126,0.10);
+        --warning:      #e8a838;
+        --warning-bg:   rgba(232,168,56,0.10);
+        --danger:       #d06050;
+        --danger-bg:    rgba(208,96,80,0.10);
+        --violet:       #a882c8;
+        --radius:       8px;
+        --shadow:       0 1px 3px rgba(0,0,0,0.25);
         box-sizing: border-box;
         font-family: inherit;
         margin: 0;
@@ -23,38 +36,45 @@
     }
 
     .correction-card {
-        background-color: var(--card-bg);
-        color: var(--text-color);
-        padding: 25px;
-        border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        background-color: var(--card);
+        color: var(--text);
+        padding: 28px;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
         max-width: 800px;
         margin: 15px auto;
     }
 
     .correction-card h2 {
-        font-family: 'Orbitron', sans-serif;
-        color: #fff;
+        font-family: 'Lora', Georgia, serif;
+        color: var(--text);
         text-align: center;
-        margin-bottom: 25px;
-        text-shadow: 0 0 5px var(--main-color), 0 0 10px var(--main-color), 0 0 20px rgba(0, 206, 201, 0.7);
-        font-size: 1.8em;
-        letter-spacing: 3px;
-        font-weight: 700;
+        margin-bottom: 24px;
+        font-size: 1.55em;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 16px;
+    }
+
+    .correction-card h2 .ds-number {
+        color: var(--accent);
+        font-style: italic;
     }
 
     .correction-card hr {
         border: none;
-        border-top: 1px solid var(--disabled-color);
-        margin: 15px 0;
+        border-top: 1px solid var(--border);
+        margin: 16px 0;
     }
 
     .header-indicators {
         display: flex;
         justify-content: space-around;
-        align-items: flex-start;
-        gap: 15px;
-        padding: 10px 0 20px 0;
+        align-items: stretch;
+        gap: 12px;
+        padding: 4px 0 20px 0;
     }
 
     @media (max-width: 600px) {
@@ -62,9 +82,7 @@
             flex-direction: column;
             align-items: center;
         }
-
-        .stat-box,
-        .mood-box {
+        .stat-box, .mood-box {
             width: 90%;
             max-width: 350px;
         }
@@ -72,33 +90,40 @@
 
     .stat-box {
         text-align: center;
-        padding: 10px;
-        border: 1px solid var(--disabled-color);
-        border-radius: 8px;
-        min-width: 150px;
-        min-height: 100px;
+        padding: 14px 12px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        min-width: 140px;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        background-color: rgba(255, 255, 255, 0.02);
+        background-color: var(--surface);
         flex-grow: 1;
+        gap: 4px;
     }
 
     .stat-box p {
         margin: 0;
-        font-size: 1.1em;
-        color: #fff;
-        line-height: 1.2;
-        text-shadow: 0 0 8px rgba(0, 206, 201, 0.6);
+        font-size: 0.82em;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-weight: 500;
     }
 
     .stat-value {
-        font-size: 2.2em;
-        font-weight: bold;
-        color: #fff;
-        display: inline;
-        margin-top: 5px;
+        font-family: 'Source Code Pro', monospace;
+        font-size: 2.1em;
+        font-weight: 600;
+        color: var(--accent);
+        line-height: 1.15;
+    }
+
+    .stat-box .stat-sub {
+        font-family: 'Source Code Pro', monospace;
+        font-size: 0.95em;
+        color: var(--text-muted);
     }
 
     .mood-box {
@@ -106,235 +131,229 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        padding: 15px;
-        border: 1px solid var(--disabled-color);
-        border-radius: 8px;
-        min-width: 150px;
-        background-color: #3b4347;
-        transition: background-color 0.5s ease;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        min-height: 100px;
+        padding: 14px 12px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        min-width: 140px;
+        background-color: var(--surface);
         flex-grow: 1;
+        gap: 4px;
+        transition: border-color 0.4s ease;
     }
 
     .mood-icon-container {
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
-        margin-bottom: 5px;
+        gap: 4px;
     }
 
     #current-mood-icon {
-        font-size: 2.5em;
+        font-size: 2em;
         line-height: 1;
-        margin-bottom: 5px;
-        text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
     }
 
     #current-mood-text {
-        font-weight: bold;
-        font-size: 0.9em;
-        margin: 0;
-        color: #fff;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        font-weight: 600;
+        font-size: 0.95em;
+        color: var(--text);
     }
 
     .mood-label {
-        margin: 5px 0 0;
-        font-size: 1.1em;
-        color: #fff;
-        font-weight: normal;
-        text-shadow: 0 0 8px rgba(0, 206, 201, 0.6);
+        font-size: 0.82em;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-weight: 500;
     }
 
+    /* ─── Frise chronologique ─────────────────────────────────────── */
     .timeline-container {
         position: relative;
-        padding: 20px 0 30px;
+        padding: 16px 0 24px;
     }
 
     .timeline-steps {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: space-between;
         position: relative;
         z-index: 2;
     }
 
     .step-title {
-        font-size: 0.8em;
-        padding: 0 5px;
+        font-size: 0.75em;
+        color: var(--text-muted);
+        padding: 0 3px;
+        line-height: 1.3;
+        margin-top: 8px;
     }
 
     @media (max-width: 600px) {
-        .step-title {
-            font-size: 0.7em;
-        }
+        .step-title { font-size: 0.68em; }
     }
 
     .timeline-item {
         width: 17%;
         text-align: center;
-        opacity: 1;
-        transition: opacity 0.5s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     .step-icon {
-        font-size: 1.2em;
+        font-size: 1.1em;
         display: flex;
         justify-content: center;
         align-items: center;
-        margin: 0 auto 10px;
-        width: 50px;
-        height: 50px;
+        margin: 0 auto 0;
+        width: 44px;
+        height: 44px;
         border-radius: 50%;
-        background-color: var(--card-bg);
-        border: 4px solid var(--disabled-color);
-        color: var(--disabled-color);
-        z-index: 5;
+        background-color: var(--surface);
+        border: 2px solid var(--border-dark);
+        color: var(--text-dim);
         position: relative;
-        transition: all 0.3s ease;
+        transition: border-color 0.3s ease, color 0.3s ease;
     }
 
     .timeline-item.completed .step-icon {
-        border-color: var(--main-color);
-        color: var(--main-color);
+        border-color: var(--success);
+        color: var(--success);
+        background-color: var(--success-bg);
     }
 
     .timeline-item.active .step-icon {
-        border-color: var(--main-color);
-        color: var(--main-color);
-        box-shadow: 0 0 15px rgba(0, 206, 201, 0.9);
-        transform: scale(1.1);
+        border-color: var(--accent);
+        color: var(--accent);
+        background-color: var(--accent-bg);
+        box-shadow: 0 0 0 3px var(--accent-bg);
+    }
+
+    .timeline-item.completed .step-title,
+    .timeline-item.active .step-title {
+        color: var(--text);
     }
 
     .step-arrow {
-        font-size: 1.5em;
-        color: var(--disabled-color);
+        font-size: 0.9em;
+        color: var(--border-dark);
         flex-grow: 1;
         text-align: center;
-        margin: 0 5px;
-        transition: color 0.5s ease, transform 0.5s ease;
+        margin: 0 2px;
+        padding-top: 13px;
+        transition: color 0.4s ease;
     }
 
     .step-arrow.completed {
-        color: var(--main-color);
-        transform: scale(1.2);
+        color: var(--success);
     }
 
+    /* ─── Date de retour ──────────────────────────────────────────── */
     .return-date-info {
-        border: 2px solid var(--main-color);
-        border-radius: 10px;
-        background-color: rgba(0, 206, 201, 0.05);
+        border: 1px solid var(--border-dark);
+        border-left: 3px solid var(--accent);
+        border-radius: var(--radius);
+        background-color: var(--surface);
         text-align: center;
-        font-size: 1.3em;
-        font-weight: bold;
-        color: var(--text-color);
-        padding: 15px 10px;
+        font-size: 1.05em;
+        color: var(--text-muted);
+        padding: 12px 16px;
         margin-top: 20px;
-        box-shadow: 0 0 10px rgba(0, 206, 201, 0.1);
     }
 
     .return-date-value {
-        color: var(--main-color);
-        margin-left: 5px;
-        text-shadow: 0 0 5px rgba(0, 206, 201, 0.5);
+        font-family: 'Source Code Pro', monospace;
+        color: var(--accent);
+        font-weight: 600;
+        margin-left: 6px;
     }
 
+    /* ─── Citation ────────────────────────────────────────────────── */
     .quote-text {
         text-align: center;
+        font-family: 'Lora', Georgia, serif;
         font-style: italic;
-        color: rgba(255, 255, 255, 0.8);
-        margin-top: 20px;
-        margin-bottom: 10px;
-        padding: 0 20px;
-        font-size: 1em;
-        line-height: 1.4;
+        color: var(--text-dim);
+        margin-top: 18px;
+        margin-bottom: 8px;
+        padding: 0 24px;
+        font-size: 0.92em;
+        line-height: 1.55;
     }
 
+    /* ─── Boutons ─────────────────────────────────────────────────── */
     .button-group {
         display: flex;
         justify-content: space-between;
-        gap: 20px;
-        margin-top: 15px;
+        gap: 12px;
+        margin-top: 16px;
     }
 
     .btn {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 25px;
+        padding: 9px 18px;
+        border-radius: var(--radius);
         cursor: pointer;
-        font-weight: bold;
-        transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+        font-weight: 600;
+        font-family: inherit;
+        font-size: 0.92em;
+        transition: background-color 0.2s, opacity 0.2s;
         text-align: center;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--border-dark);
+        background: var(--surface);
+        color: var(--text);
     }
 
     .report-btn {
-        background-color: var(--main-color);
-        color: var(--card-bg);
+        background-color: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
         flex-grow: 1;
     }
 
-    .report-btn:not([disabled]) {
-        background-color: var(--main-color);
-        color: #1a1a1a;
-        font-size: 1.05em;
-        box-shadow: 0 0 10px var(--main-color), 0 0 20px rgba(0, 206, 201, 0.5);
-    }
-
-    .report-btn:hover:not([disabled]) {
-        background-color: #00b894;
-        transform: translateY(-2px);
-        box-shadow: 0 0 15px #00b894, 0 5px 10px rgba(0, 0, 0, 0.5);
+    .report-btn:not([disabled]):hover {
+        opacity: 0.88;
     }
 
     .report-btn[disabled] {
-        background-color: var(--disabled-color);
+        background-color: var(--surface);
+        border-color: var(--border);
+        color: var(--text-dim);
         cursor: not-allowed;
-        color: #fff;
-        box-shadow: none;
     }
 
     .remarks-btn {
         background-color: transparent;
-        border: 2px solid var(--main-color);
-        color: var(--main-color);
+        border: 1px solid var(--border-dark);
+        color: var(--text-muted);
         flex-grow: 1;
     }
 
     .remarks-btn:hover:not(.hidden) {
-        background-color: var(--main-color);
-        color: var(--card-bg);
-        transform: translateY(-2px);
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+        background-color: var(--surface);
+        color: var(--text);
     }
 
-    .hidden {
-        display: none !important;
-    }
+    .hidden { display: none !important; }
 
+    /* ─── Zone remarques ──────────────────────────────────────────── */
     .remarks-area {
-        margin-top: 15px;
-        padding: 15px;
-        background-color: #3b4347;
-        border-radius: 8px;
+        margin-top: 14px;
+        padding: 14px 16px;
+        background-color: var(--surface);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
         font-size: 0.9em;
     }
 
     .remarks-area.important-bg {
-        background-color: rgba(0, 206, 201, 0.1);
-        border: 2px solid var(--main-color);
+        background-color: var(--warning-bg);
+        border-color: var(--warning);
     }
 
     .remarks-area.error {
-        border: 2px solid var(--error-color);
-        background-color: rgba(255, 71, 87, 0.15);
-    }
-
-    .remarks-area.error .remarks-list li {
-        color: var(--error-color);
-        border-left-color: var(--error-color);
+        border-color: var(--danger);
+        background-color: var(--danger-bg);
     }
 
     .remarks-list {
@@ -345,53 +364,70 @@
 
     .remarks-list li {
         margin-bottom: 8px;
-        padding-left: 10px;
-        border-left: 3px solid var(--main-color);
-        color: var(--text-color);
-        line-height: 1.3;
+        padding: 6px 10px;
+        border-left: 3px solid var(--accent);
+        color: var(--text);
+        line-height: 1.4;
+        background: rgba(91,155,213,0.05);
+        border-radius: 0 var(--radius) var(--radius) 0;
     }
 
     .remarks-list li strong {
-        color: #fff;
+        color: var(--accent);
     }
 
     .remarks-list li.important {
-        border-left-color: var(--error-color);
-        color: var(--error-color);
-        font-weight: bold;
+        border-left-color: var(--warning);
+        background: var(--warning-bg);
+        color: var(--warning);
+        font-weight: 600;
+    }
+
+    .remarks-list li.important strong {
+        color: var(--warning);
+    }
+
+    .remarks-area.error .remarks-list li {
+        border-left-color: var(--danger);
+        background: var(--danger-bg);
+        color: var(--danger);
+    }
+
+    .remarks-area.error .remarks-list li strong {
+        color: var(--danger);
     }
 </style>
 
 <div class="tracker-wrapper">
     <div class="correction-card">
-        <h2>DS n°<span id="ds-number">[X]</span> - Suivi de Correction</h2>
+        <h2><span id="ds-number" class="ds-number">[X]</span> — Suivi de correction</h2>
 
         <div class="header-indicators">
             <div class="stat-box average-gauge">
-                <p>Moyenne de Classe</p>
+                <p>Moyenne de classe</p>
                 <span id="current-average" class="stat-value">--</span>
             </div>
 
             <div id="mood-box" class="mood-box">
                 <div class="mood-icon-container">
-                    <span id="current-mood-icon">...</span>
-                    <p id="current-mood-text">...</p>
+                    <span id="current-mood-icon">…</span>
+                    <p id="current-mood-text">…</p>
                 </div>
                 <p class="mood-label">Humeur du correcteur</p>
             </div>
 
             <div class="stat-box copies-gauge">
-                <p>Copies Corrigées</p>
+                <p>Copies corrigées</p>
                 <span id="corrected-count" class="stat-value">--</span>
-                <span id="total-count">/--</span>
+                <span id="total-count" class="stat-sub">/--</span>
             </div>
         </div>
-        
+
         <div class="timeline-container">
             <div id="timeline-steps" class="timeline-steps"></div>
 
             <div class="return-date-info">
-                Date estimée de retour des copies :
+                Date estimée de retour :
                 <span id="estimated-return-date" class="return-date-value">--/--/--</span>
             </div>
 
@@ -411,72 +447,52 @@
 
         <script>
             // =================================================================
-            // ⚠️ 1. CONFIGURATION
+            // 1. CONFIGURATION
             // =================================================================
-            // Remplacez ces valeurs par les vôtres.
-            const SHEET_ID = '1pKcYxUJtMthkJ9mN96LP4RzwTMoitBGs1b-1rw2aAMg';
-            const GID_STATUT = '1069440488';
-            const GID_REMARQUES = '143784605';
 
-            const DEFAULT_SHEET_ID = 'VOTRE_ID_DE_FEUILLE_ICI';
+            const GIST_USER = 'ProfFranco';
+            const GIST_ID   = '092f02b8ae7c0edeffe8e68f9a5cb0c3';
 
-            const GOOGLE_SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID_STATUT}`;
-            const REMARKS_SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID_REMARQUES}`;
+            const GOOGLE_SHEET_URL  = `https://gist.githubusercontent.com/${GIST_USER}/${GIST_ID}/raw/statut.csv`;
+            const REMARKS_SHEET_URL = `https://gist.githubusercontent.com/${GIST_USER}/${GIST_ID}/raw/remarques.csv`;
 
             // =================================================================
             // 2. CONSTANTES
             // =================================================================
-
             const CORRECTION_STEPS = [
                 { title: "Rédaction du corrigé", icon: "📝" },
                 { title: "Élaboration du barème", icon: "⚖️" },
-                { title: "Correction des copies test", icon: "🔍" },
+                { title: "Copies test", icon: "🔍" },
                 { title: "Correction des copies", icon: "🖍️" },
-                { title: "Normalisation des notes", icon: "📊" },
+                { title: "Normalisation", icon: "📊" },
                 { title: "Terminé", icon: "✅" }
             ];
 
             const MOODS = {
-                "Motivé": { icon: "😀", hue: 150 },
-                "Concentré": { icon: "🧠", hue: 120 },
-                "Perplexe": { icon: "🤔", hue: 60 },
-                "Enthousiaste": { icon: "🥳", hue: 90 },
-                "Épuisé": { icon: "😴", hue: 30 },
-                "Énervé": { icon: "😡", hue: 0 },
-                "Désespéré": { icon: "😩", hue: 0 }
+                "Motivé":       { icon: "😀" },
+                "Concentré":    { icon: "🧠" },
+                "Perplexe":     { icon: "🤔" },
+                "Enthousiaste": { icon: "🥳" },
+                "Épuisé":       { icon: "😴" },
+                "Énervé":       { icon: "😡" },
+                "Désespéré":    { icon: "😩" }
             };
 
-            const DEFAULT_LOADING_STATE = { currentMood: "Concentré", hue: 120 };
-
             // =================================================================
-            // 3. FONCTIONS DE RÉCUPÉRATION DES DONNÉES
+            // 3. RÉCUPÉRATION DES DONNÉES
             // =================================================================
-
             async function fetchCurrentState() {
                 try {
-                    if (SHEET_ID === DEFAULT_SHEET_ID) {
-                        throw new Error("Erreur de configuration: Veuillez remplacer l'ID de la feuille.");
-                    }
-
-                    const cacheBuster = `&v=${new Date().getTime()}`;
-                    const url = GOOGLE_SHEET_URL + cacheBuster;
+                    const url = GOOGLE_SHEET_URL + `?v=${Date.now()}`;
                     const response = await fetch(url);
-
-                    if (!response.ok) {
-                        const errorDetails = response.status === 404 ? "Code 404 (Non trouvé). Assurez-vous que la feuille est 'Publiée sur le Web' en format CSV." : `Code ${response.status}. Accès refusé.`;
-                        throw new Error(`Erreur HTTP: ${errorDetails}`);
-                    }
-
+                    if (!response.ok) throw new Error(`Erreur HTTP ${response.status}.`);
                     const csvText = await response.text();
-                    const lines = csvText.trim().split('\n');
                     const state = {};
-
-                    lines.forEach(line => {
+                    csvText.trim().split('\n').forEach(line => {
                         const parts = line.split(',');
                         if (parts.length < 2) return;
                         const key = parts[0].trim();
                         const value = parts[1].trim();
-
                         if (!isNaN(value) && value !== '') {
                             state[key] = parseFloat(value);
                         } else if (value.toLowerCase() === 'true' || value.toLowerCase() === 'false') {
@@ -485,93 +501,54 @@
                             state[key] = value.replace(/^"|"$/g, '');
                         }
                     });
-
                     state.currentStepIndex = parseInt(state.currentStepIndex) || 0;
                     state.dsNumber = state.dsNumber || '[X]';
                     state.estimatedReturnDate = state.estimatedReturnDate || "--/--/--";
                     state.quoteText = state.quoteText || "Proverbe Shadok : quand on ne sait pas où l'on va, il faut y aller, et le plus vite possible !";
                     state.reportUrl = state.reportUrl || null;
-
                     return state;
-
                 } catch (error) {
-                    console.error("Échec du chargement de l'état (Onglet STATUT).", error);
-                    const errorMessage = error.message.includes("Erreur de configuration") ? error.message : `Échec de la connexion aux données. Cause : ${error.message}`;
-
+                    console.error("Échec du chargement.", error);
                     return {
-                        totalCopies: '--',
-                        currentStepIndex: 0,
-                        copiesCorrigées: '--',
-                        currentAverage: '--',
-                        dsNumber: '[X]',
-                        currentMood: "Désespéré",
-                        hasRemarks: true,
-                        estimatedReturnDate: "--/--/--",
-                        quoteText: "Erreur de chargement...",
-                        remarksText: errorMessage,
-                        reportUrl: null,
-                        errorState: true
+                        totalCopies: '--', currentStepIndex: 0, copiesCorrigées: '--',
+                        currentAverage: '--', dsNumber: '[X]', currentMood: "Désespéré",
+                        hasRemarks: true, estimatedReturnDate: "--/--/--",
+                        quoteText: "Erreur de chargement…",
+                        remarksText: error.message, reportUrl: null, errorState: true
                     };
                 }
             }
 
             async function fetchRemarksList() {
                 try {
-                    if (SHEET_ID === DEFAULT_SHEET_ID) {
-                        return [{ title: "Non configuré", content: "L'ID de la Feuille est manquant.", isImportant: true }];
-                    }
-
-                    const cacheBuster = `&v=${new Date().getTime()}`;
-                    const url = REMARKS_SHEET_URL + cacheBuster;
+                    const url = REMARKS_SHEET_URL + `?v=${Date.now()}`;
                     const response = await fetch(url);
-
-                    if (!response.ok) {
-                        throw new Error(`Erreur HTTP: ${response.status}. Vérifiez le GID et l'état de publication de l'onglet REMARQUES.`);
-                    }
-
+                    if (!response.ok) throw new Error(`Erreur HTTP ${response.status}.`);
                     const csvText = await response.text();
                     const lines = csvText.trim().split('\n');
-
-                    // Skip header row if present
                     const dataLines = lines.length > 0 && lines[0].toLowerCase().includes('titre') ? lines.slice(1) : lines;
-
-                    const remarksList = dataLines
-                        .filter(line => line.trim().length > 0)
-                        .map(line => {
-                            const parts = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                            if (parts.length >= 2) {
-                                const title = parts[0].trim().replace(/^"|"$/g, '');
-                                const content = parts[1].trim().replace(/^"|"$/g, '');
-                                const priority = parts[2] ? parts[2].trim().toUpperCase().replace(/^"|"$/g, '') : 'NORMAL';
-
-                                return {
-                                    title: title,
-                                    content: content,
-                                    isImportant: priority.includes('IMPORTANT')
-                                };
-                            }
-                            return null;
-                        }).filter(remark => remark !== null);
-
-                    return remarksList;
-
+                    return dataLines.filter(l => l.trim()).map(line => {
+                        const parts = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                        if (parts.length >= 2) {
+                            return {
+                                title: parts[0].trim().replace(/^"|"$/g, ''),
+                                content: parts[1].trim().replace(/^"|"$/g, ''),
+                                isImportant: parts[2] ? parts[2].trim().toUpperCase().includes('IMPORTANT') : false
+                            };
+                        }
+                        return null;
+                    }).filter(Boolean);
                 } catch (error) {
-                    console.error("Échec du chargement des remarques (Onglet REMARQUES).", error);
-                    return [{ title: "Erreur de chargement", content: `Impossible de lire la liste des remarques. (${error.message})`, isImportant: true }];
+                    return [{ title: "Erreur", content: error.message, isImportant: true }];
                 }
             }
 
             function downloadReport(reportUrl) {
                 if (reportUrl) {
-                    try {
-                        // Ouvre le lien dans un nouvel onglet, ce qui fonctionne pour les PDFs/Pages web
-                        window.open(reportUrl, '_blank');
-                    } catch (e) {
-                        console.error("Erreur lors de l'ouverture du lien :", e);
-                        showReportError("Le navigateur a bloqué le lien ou celui-ci mène à un téléchargement inattendu. Veuillez vérifier l'URL fournie.");
-                    }
+                    try { window.open(reportUrl, '_blank'); }
+                    catch (e) { showReportError("Impossible d'ouvrir le lien du rapport."); }
                 } else {
-                    showReportError("Le rapport final est prêt, mais l'URL du rapport (<code>reportUrl</code>) est manquante ou vide.");
+                    showReportError("Le rapport est prêt mais l'URL (<code>reportUrl</code>) est absente.");
                 }
             }
 
@@ -579,128 +556,77 @@
                 const remarksArea = document.getElementById('remarks-area');
                 remarksArea.classList.remove('hidden');
                 remarksArea.classList.add('error');
-                document.getElementById('remarks-button').classList.add('hidden'); 
-                remarksArea.innerHTML = `
-                    <ul class="remarks-list">
-                        <li class="important"> <strong>Avertissement :</strong> ${message} </li>
-                    </ul>
-                `;
+                document.getElementById('remarks-button').classList.add('hidden');
+                remarksArea.innerHTML = `<ul class="remarks-list"><li class="important"><strong>Avertissement :</strong> ${message}</li></ul>`;
             }
 
             // =================================================================
-            // 4. FONCTION DE MISE À JOUR DE L'INTERFACE
+            // 4. MISE À JOUR DE L'INTERFACE
             // =================================================================
-
             function updateCorrectionDisplay(state, steps, moods, remarksList) {
-                // 1. Mise à jour des Indicateurs Chiffrés et Titre
                 document.getElementById('ds-number').textContent = state.dsNumber;
-                const averageDisplay = state.currentAverage !== '--' && state.currentAverage !== 0 ? state.currentAverage.toFixed(1) : '--';
-                document.getElementById('current-average').textContent = averageDisplay;
+                const avg = state.currentAverage;
+                document.getElementById('current-average').textContent =
+                    (avg !== '--' && avg !== 0) ? parseFloat(avg).toFixed(1) : '--';
                 document.getElementById('corrected-count').textContent = state.copiesCorrigées;
                 document.getElementById('total-count').textContent = `/${state.totalCopies || '--'}`;
                 document.getElementById('estimated-return-date').textContent = state.estimatedReturnDate;
                 document.getElementById('quote-display').textContent = state.quoteText;
 
-
-                // 2. Mise à jour de l'Humeur
                 const moodData = moods[state.currentMood] || moods["Désespéré"];
+                document.getElementById('current-mood-icon').textContent = state.errorState ? '❌' : moodData.icon;
+                document.getElementById('current-mood-text').textContent = state.errorState ? 'Erreur' : (state.currentMood || "Chargement…");
+
                 const moodBox = document.getElementById('mood-box');
-                const moodIcon = document.getElementById('current-mood-icon');
-                const moodText = document.getElementById('current-mood-text');
-                const currentMoodName = state.errorState ? 'Erreur Config' : (state.currentMood || "Chargement...");
+                moodBox.style.borderColor = state.errorState ? 'var(--danger)' : 'var(--border)';
 
-                moodIcon.textContent = state.errorState ? '❌' : moodData.icon;
-                moodText.textContent = currentMoodName;
-
-                const hue = state.errorState ? 0 : moodData.hue;
-                moodBox.style.backgroundColor = `hsl(${hue}, 80%, 40%)`;
-
-                // 3. Génération et Mise à jour de la Frise Chronologique
-                const timelineStepsContainer = document.getElementById('timeline-steps');
-                timelineStepsContainer.innerHTML = '';
+                const container = document.getElementById('timeline-steps');
+                container.innerHTML = '';
                 const maxStep = steps.length - 1;
-
                 steps.forEach((step, index) => {
                     if (state.errorState && index > 0) return;
-
                     const isCompleted = index < state.currentStepIndex;
                     const isActive = index === state.currentStepIndex;
-
-                    const stepDiv = document.createElement('div');
-                    let classes = 'timeline-item';
-                    if (isCompleted) classes += ' completed';
-                    if (isActive) classes += ' active';
-                    stepDiv.className = classes;
-                    stepDiv.innerHTML = `
-                        <div class="step-icon">${step.icon}</div>
-                        <p class="step-title">${step.title}</p>
-                    `;
-                    timelineStepsContainer.appendChild(stepDiv);
-
-                    // Ajout de la flèche entre les étapes
+                    const div = document.createElement('div');
+                    div.className = 'timeline-item' + (isCompleted ? ' completed' : '') + (isActive ? ' active' : '');
+                    div.innerHTML = `<div class="step-icon">${step.icon}</div><p class="step-title">${step.title}</p>`;
+                    container.appendChild(div);
                     if (index < maxStep && !state.errorState) {
-                        const arrowDiv = document.createElement('div');
-                        let arrowClasses = 'step-arrow';
-                        if (isCompleted) {
-                            arrowClasses += ' completed';
-                        }
-                        arrowDiv.className = arrowClasses;
-                        arrowDiv.textContent = '▶';
-                        timelineStepsContainer.appendChild(arrowDiv);
+                        const arrow = document.createElement('div');
+                        arrow.className = 'step-arrow' + (isCompleted ? ' completed' : '');
+                        arrow.textContent = '▶';
+                        container.appendChild(arrow);
                     }
                 });
 
-
-                // 4. Gestion du Bouton de Rapport
                 const reportButton = document.getElementById('report-button');
                 const isFinished = state.currentStepIndex === steps.length - 1 && !state.errorState;
-                const isLinkProvided = !!state.reportUrl;
-                const isReadyToDownload = isFinished && isLinkProvided;
-
-                if (isReadyToDownload) {
+                if (isFinished && state.reportUrl) {
                     reportButton.removeAttribute('disabled');
                     reportButton.onclick = () => downloadReport(state.reportUrl);
-                    reportButton.textContent = "Télécharger le rapport";
                 } else {
                     reportButton.setAttribute('disabled', 'true');
                     reportButton.onclick = null;
-                    if (isFinished && !isLinkProvided) {
-                        reportButton.textContent = "Lien du rapport manquant !";
-                    } else {
-                        reportButton.textContent = "Télécharger le rapport";
-                    }
+                    if (isFinished && !state.reportUrl) reportButton.textContent = "Lien du rapport manquant !";
                 }
 
-
-                // 5. Gestion des Remarques (avec priorité et fond)
                 const remarksButton = document.getElementById('remarks-button');
                 const remarksArea = document.getElementById('remarks-area');
-                remarksArea.classList.toggle('error', state.errorState);
-
-                const hasImportantRemarks = remarksList.some(r => r.isImportant);
-                remarksArea.classList.toggle('important-bg', hasImportantRemarks && !state.errorState);
-
-                let listHTML = '';
+                remarksArea.classList.toggle('error', !!state.errorState);
+                const hasImportant = remarksList.some(r => r.isImportant);
+                remarksArea.classList.toggle('important-bg', hasImportant && !state.errorState);
 
                 if (state.errorState) {
-                    listHTML = `
-                        <ul class="remarks-list">
-                            <li class="important"><strong>Erreur fatale de connexion :</strong> ${state.remarksText}</li>
-                        </ul>
-                    `;
+                    remarksArea.innerHTML = `<ul class="remarks-list"><li class="important"><strong>Erreur :</strong> ${state.remarksText}</li></ul>`;
                     remarksArea.classList.remove('hidden');
                     remarksButton.classList.add('hidden');
-
                 } else if (remarksList.length > 0) {
-                    listHTML = '<ul class="remarks-list">';
-                    remarksList.forEach(remark => {
-                        const liClass = remark.isImportant ? 'important' : '';
-                        listHTML += `
-                            <li class="${liClass}"><strong>${remark.title}</strong> : ${remark.content}</li>
-                        `;
+                    let html = '<ul class="remarks-list">';
+                    remarksList.forEach(r => {
+                        html += `<li class="${r.isImportant ? 'important' : ''}"><strong>${r.title}</strong> : ${r.content}</li>`;
                     });
-                    listHTML += '</ul>';
-
+                    html += '</ul>';
+                    remarksArea.innerHTML = html;
                     remarksButton.classList.remove('hidden');
                     remarksArea.classList.add('hidden');
                 } else {
@@ -708,60 +634,24 @@
                     remarksArea.classList.add('hidden');
                 }
 
-                remarksArea.innerHTML = listHTML;
-
-                // Logique du bouton Afficher/Masquer
                 remarksButton.onclick = () => {
-                    const isHidden = remarksArea.classList.toggle('hidden');
-                    remarksButton.innerHTML = isHidden ? '📢 Afficher les remarques sur le DS' : '❌ Masquer les remarques sur le DS';
+                    const hidden = remarksArea.classList.toggle('hidden');
+                    remarksButton.innerHTML = hidden ? '📢 Afficher les remarques sur le DS' : '❌ Masquer les remarques sur le DS';
                 };
             }
 
-
             // =================================================================
-            // 5. LANCEMENT DE L'APPLICATION
+            // 5. INIT
             // =================================================================
-            
-            function initializeDisplay() {
-                const moodBox = document.getElementById('mood-box');
-                const moodIcon = document.getElementById('current-mood-icon');
-                const moodText = document.getElementById('current-mood-text');
-                const moodData = MOODS[DEFAULT_LOADING_STATE.currentMood];
-
-                // Affichage de l'état de chargement initial
-                moodBox.style.backgroundColor = `hsl(${moodData.hue}, 80%, 40%)`;
-                moodIcon.textContent = moodData.icon;
-                moodText.textContent = "Chargement...";
-            }
-
-
             document.addEventListener('DOMContentLoaded', async () => {
-                initializeDisplay();
-
-                if (SHEET_ID === DEFAULT_SHEET_ID) {
-                    const errorState = {
-                        errorState: true,
-                        remarksText: "Erreur de configuration: Veuillez remplacer l'ID de la feuille Google (const SHEET_ID) dans le code JavaScript.",
-                        dsNumber: '[X]',
-                        currentAverage: '--',
-                        copiesCorrigées: '--',
-                        totalCopies: '--',
-                        estimatedReturnDate: "--/--/--",
-                        currentStepIndex: 0,
-                        quoteText: "Erreur de chargement...",
-                        reportUrl: null
-                    };
-                    updateCorrectionDisplay(errorState, CORRECTION_STEPS, MOODS, []);
-                    return;
-                }
+                document.getElementById('current-mood-icon').textContent = MOODS["Concentré"].icon;
+                document.getElementById('current-mood-text').textContent = "Chargement…";
 
                 const currentState = await fetchCurrentState();
                 let remarksList = [];
-
                 if (!currentState.errorState && currentState.hasRemarks) {
                     remarksList = await fetchRemarksList();
                 }
-
                 updateCorrectionDisplay(currentState, CORRECTION_STEPS, MOODS, remarksList);
             });
         </script>
