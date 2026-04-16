@@ -483,8 +483,7 @@
             // =================================================================
             async function fetchCurrentState() {
                 try {
-                    if (SHEET_ID === DEFAULT_SHEET_ID) throw new Error("Erreur de configuration : ID de feuille manquant.");
-                    const url = GOOGLE_SHEET_URL + `&v=${Date.now()}`;
+                    const url = GOOGLE_SHEET_URL + `?v=${Date.now()}`;
                     const response = await fetch(url);
                     if (!response.ok) throw new Error(`Erreur HTTP ${response.status}.`);
                     const csvText = await response.text();
@@ -522,8 +521,7 @@
 
             async function fetchRemarksList() {
                 try {
-                    if (SHEET_ID === DEFAULT_SHEET_ID) return [{ title: "Non configuré", content: "ID de feuille manquant.", isImportant: true }];
-                    const url = REMARKS_SHEET_URL + `&v=${Date.now()}`;
+                    const url = REMARKS_SHEET_URL + `?v=${Date.now()}`;
                     const response = await fetch(url);
                     if (!response.ok) throw new Error(`Erreur HTTP ${response.status}.`);
                     const csvText = await response.text();
@@ -648,17 +646,6 @@
             document.addEventListener('DOMContentLoaded', async () => {
                 document.getElementById('current-mood-icon').textContent = MOODS["Concentré"].icon;
                 document.getElementById('current-mood-text').textContent = "Chargement…";
-
-                if (SHEET_ID === DEFAULT_SHEET_ID) {
-                    updateCorrectionDisplay({
-                        errorState: true,
-                        remarksText: "Remplacez <code>SHEET_ID</code> par votre identifiant Google Sheet.",
-                        dsNumber: '[X]', currentAverage: '--', copiesCorrigées: '--',
-                        totalCopies: '--', estimatedReturnDate: "--/--/--",
-                        currentStepIndex: 0, quoteText: "", reportUrl: null
-                    }, CORRECTION_STEPS, MOODS, []);
-                    return;
-                }
 
                 const currentState = await fetchCurrentState();
                 let remarksList = [];
